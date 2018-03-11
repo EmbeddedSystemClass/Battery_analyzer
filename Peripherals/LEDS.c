@@ -3,10 +3,7 @@
 #include "ws2812b.h"
 #include "directives.h"
 
-const uint8_t C_RELAY_ON[] = COLOR_RELAY_ON;
-const uint8_t C_RELAY_OFF[] = COLOR_RELAY_OFF;
-
-static uint8_t ledArray[4 * 3]; // RGB LED colour place
+static uint8_t ledArray[3]; // RGB LED colour place
 
 void LEDS_init(void)
 {
@@ -18,10 +15,10 @@ void LEDS_init(void)
   delay(10);
 }
 
-void LEDS_setColor(int id, uint8_t *color)
+void LEDS_setColor(uint8_t *color)
 {
 
-    memcpy(&ledArray[id * 3], color, 3);
+    memcpy(&ledArray[0], color, 3);
 }
 
 void LEDS_show(void)

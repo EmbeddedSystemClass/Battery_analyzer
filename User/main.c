@@ -57,6 +57,8 @@ int main(void)
     SMART_DEBUGF(DEBUG_INIT, ("------------------\r\n\r\n"));
     SMART_DEBUGF(DEBUG_INIT, ("System clock %ld MHz\r\n\r\n", SystemCoreClock / 1000000));
 
+    LEDS_init();
+    LEDS_setColor((uint8_t[])COLOR_GREEN);
 
 
     while (1) {
