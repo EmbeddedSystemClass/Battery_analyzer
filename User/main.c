@@ -27,6 +27,12 @@
 #include <string.h>
 #include "timer.h"
 #include "LEDS.h"
+#include "uart.h"
+#include "i2c.h"
+#include "eeprom.h"
+#include "ssd1306.h"
+#include "ugui.h"
+#include "UI.h"
 
 static void LL_Init(void);
 static void SystemClock_Config(void);
@@ -42,6 +48,8 @@ IWDG_TypeDef IWDG1;
  */
 struct timer tim;
 
+UG_GUI gui;
+
 /**
  * @brief Main function of whole project
  * @return none
@@ -49,18 +57,44 @@ struct timer tim;
 int main(void)
 {
     LL_Init();
+    Uart_LL_init();
+    LEDS_init();
+    
+    ssd1306_rst_init();
 
-    SMART_DEBUGF(DEBUG_INIT, ("\r\n\r\n------------------\r\n"));
+    SMART_DEBUGF(DEBUG_INIT, ("\r\n------------------\r\n"));
     SMART_DEBUGF(DEBUG_INIT, ("Battery analyzer\r\n"));
     SMART_DEBUGF(DEBUG_INIT, ("  sw version %s\r\n", SW_VERSION));
     SMART_DEBUGF(DEBUG_INIT, ("  build %s\r\n", __TIME__));
     SMART_DEBUGF(DEBUG_INIT, ("------------------\r\n\r\n"));
     SMART_DEBUGF(DEBUG_INIT, ("System clock %ld MHz\r\n\r\n", SystemCoreClock / 1000000));
 
-    LEDS_init();
-    LEDS_setColor((uint8_t[])COLOR_GREEN);
-
-
+    LEDS_setColor((uint8_t[])COLOR_YELLOW);
+    LEDS_show();
+    
+    ssd1306_rst();
+    
+    I2C_LL_init();
+    
+    ssd1306_init();
+    
+    timer_set(&tim, 500);
+    while (!timer_expired(&tim));
+    ssd1306_Update_display();
+    timer_reset(&tim);
+    while (!timer_expired(&tim));
+    UG_Init(&gui, pixelset, 128, 64);
+    
+    UG_FontSelect(&FONT_6X8_CZECH);
+	UG_SetBackcolor(0);
+	UG_SetForecolor(1);
+	UG_FillScreen(200);
+        ssd1306_Update_display();
+timer_reset(&tim);
+    while (!timer_expired(&tim));
+    
+    UI_TIMER_Init();
+	main_state_set(MAIN_STATE_NORMAL);
     while (1) {
         ;
     }

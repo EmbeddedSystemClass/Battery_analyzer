@@ -14,6 +14,7 @@
 #include <stdint.h>
 
 #include "iprintf.h"
+#include "uart.h"
 
 typedef unsigned int UINT;
 typedef unsigned char BYTE;
@@ -26,25 +27,22 @@ typedef char TCHAR;
 #define IsLower(c)	(((c)>='a')&&((c)<='z'))
 #define IsDigit(c)	(((c)>='0')&&((c)<='9'))
 
-static int printchar(char **out, const char * out_end, int c) {
+static int printchar(char **out, int c) {
     if (out) {
-        if ((*out) < out_end) {
-            **out = (char)c;
-            ++(*out);
-        }
+        **out = c;
+        ++(*out);
     } else {
-//        smart_putchar(c);
-        ;
+        uart_putchar(c);
     }
     return 1;
 }
 
-static int prints(char **out, const char * out_end, const TCHAR* str) {
+static int prints(char **out, const TCHAR* str) {
     int n;
 
 
     for (n = 0; *str; str++, n++) {
-        if (printchar(out, out_end, *str) == EOF) return EOF;
+        if (printchar(out, *str) == EOF) return EOF;
     }
     return n;
 }
@@ -59,21 +57,20 @@ static int prints(char **out, const char * out_end, const TCHAR* str) {
 #define FLAG_SIGN               0x08
 #define FLAG_ALWAYS_SIGN        0x10
 
-int smart_vsliprintf_unterminated(char *buf, unsigned int buf_len, const char *format, va_list arp) {
+int smart_vsiprintf(char *buf, const char *format, va_list arp) {
     BYTE f, r;
     UINT i, j, w;
     ULONG v;
-    TCHAR c, d, s[32], *p;
+    TCHAR c, d, s[16], *p;
     int res, chc, cc, res2;
     char ** string = (buf != 0) ? &buf : 0;
-    char * buf_end = (buf != 0) ? buf + buf_len : 0;
 
     for (cc = res = 0; cc != EOF; res += cc) {
         res2 = 0;
         c = *format++;
         if (c == 0) break; /* End of string */
         if (c != '%') { /* Non escape character */
-            cc = printchar(string, buf_end, c);
+            cc = printchar(string, c);
             if (cc != EOF) cc = 1;
             continue;
         }
@@ -107,14 +104,14 @@ int smart_vsliprintf_unterminated(char *buf, unsigned int buf_len, const char *f
                 for (j = 0; p[j]; j++);
                 chc = 0;
                 if (!(f & FLAG_LEFT_JUSTIFIED)) {
-                    while (j++ < w) chc += (cc = printchar(string, buf_end, ' '));
+                    while (j++ < w) chc += (cc = printchar(string, ' '));
                 }
-                chc += (cc = prints(string, buf_end, p));
-                while (j++ < w) chc += (cc = printchar(string, buf_end, ' '));
+                chc += (cc = prints(string, p));
+                while (j++ < w) chc += (cc = printchar(string, ' '));
                 if (cc != EOF) cc = chc;
                 continue;
             case 'C': /* Character */
-                cc = printchar(string, buf_end, (TCHAR) va_arg(arp, int));
+                cc = printchar(string, (TCHAR) va_arg(arp, int));
                 continue;
             case 'B': /* Binary */
                 r = 2;
@@ -127,15 +124,15 @@ int smart_vsliprintf_unterminated(char *buf, unsigned int buf_len, const char *f
                 r = 10;
                 break;
             case 'P': /* Hexadecimal pointer */
-                res2 += (cc = printchar(string, buf_end, '0'));
-                res2 += (cc = printchar(string, buf_end, 'x'));
+                res2 += (cc = printchar(string, '0'));
+                res2 += (cc = printchar(string, 'x'));
                 r = 16;
                 break;
             case 'X': /* Hexdecimal */
                 r = 16;
                 break;
             default: /* Unknown type (pass-through) */
-                cc = printchar(string, buf_end, c);
+                cc = printchar(string, c);
                 continue;
         }
 
@@ -155,13 +152,14 @@ int smart_vsliprintf_unterminated(char *buf, unsigned int buf_len, const char *f
         if (f & FLAG_SIGN) s[i++] = '-';
         else if (f & FLAG_ALWAYS_SIGN) s[i++] = '+';
         j = i;
-        if (f & (FLAG_SIGN | FLAG_ALWAYS_SIGN)) res2 += printchar(string, buf_end, s[--i]);
+        if (f & (FLAG_SIGN | FLAG_ALWAYS_SIGN)) res2 += printchar(string, s[--i]);
         d = (f & FLAG_0_PADDDING) ? '0' : ' ';
-        while (!(f & FLAG_LEFT_JUSTIFIED) && j++ < w) res2 += (cc = printchar(string, buf_end, d));
-        do res2 += (cc = printchar(string, buf_end, s[--i])); while (i);
-        while (j++ < w) res2 += (cc = printchar(string, buf_end, ' '));
+        while (!(f & FLAG_LEFT_JUSTIFIED) && j++ < w) res2 += (cc = printchar(string, d));
+        do res2 += (cc = printchar(string, s[--i])); while (i);
+        while (j++ < w) res2 += (cc = printchar(string, ' '));
         if (cc != EOF) cc = res2;
     }
+    if (string) **string = '\0';
     return (cc == EOF) ? cc : res;
 }
 
@@ -170,32 +168,19 @@ int smart_iprintf(const char *format, ...) {
     int res;
 
     va_start(args, format);
-    res = smart_vsliprintf_unterminated(0, 0, format, args);
+    res = smart_vsiprintf(0, format, args);
     va_end(args);
     return res;
 }
 
-int smart_sliprintf(char *string, unsigned int n, const char *format, ...) {
+int smart_siprintf(char *string, const char *format, ...) {
     va_list args;
     int res;
 
     va_start(args, format);
-    res = smart_vsliprintf_unterminated(string, n, format, args);
-    unsigned int len = res + 1;
-    if (len > n) {
-        len = n;
-    }
-    if (len) string[len - 1] = '\0';
+    res = smart_vsiprintf(string, format, args);
     va_end(args);
     return res;
 }
 
-int smart_sliprintf_unterminated(char *string, unsigned int n, const char *format, ...) {
-    va_list args;
-    int res;
 
-    va_start(args, format);
-    res = smart_vsliprintf_unterminated(string, n, format, args);
-    va_end(args);
-    return res;
-}

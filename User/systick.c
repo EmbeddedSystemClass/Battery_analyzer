@@ -1,4 +1,5 @@
 #include "systick.h"
+#include "debug.h"
 
 volatile uint32_t millis_cnt = 0;
 volatile uint32_t CLK1MS = 0;
