@@ -107,6 +107,6 @@ void ws2812b_sendArray(uint8_t *data,int datlen)
 
 void ws2812b_initPort(void)
 {
-
   LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_15, LL_GPIO_MODE_OUTPUT);
+  LL_GPIO_SetPinOutputType(GPIOB, LL_GPIO_PIN_15, LL_GPIO_OUTPUT_OPENDRAIN);
 }

@@ -98,8 +98,15 @@
 #define I2C_SCL_PIN    LL_GPIO_PIN_6
 #define I2C_SDA_PIN    LL_GPIO_PIN_7
 #define I2C_PINS_CLOCK LL_AHB1_GRP1_PERIPH_GPIOF
-#define I2C_CLOCK      LL_APB1_GRP1_PERIPH_I2C1
+#define I2C_CLOCK      LL_APB1_GRP1_PERIPH_I2C2
 #define I2C_AF         LL_GPIO_AF_1
-#define I2C            I2C1
+#define I2C            I2C2
+
+#define EEPROM_ADDRESS  0x50
+#define OLED_ADDRESS    0x78
+
+#define OLED_RST_PORT    GPIOA
+#define OLED_RST_PIN     LL_GPIO_PIN_11
+#define OLED_RST_CLOCK   LL_AHB1_GRP1_PERIPH_GPIOA
 
 #endif /* PINS_H */
