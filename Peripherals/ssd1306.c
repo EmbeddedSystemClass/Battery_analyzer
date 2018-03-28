@@ -8,7 +8,7 @@
 #include "debug.h"
 #include "timer.h"
 
-extern volatile unsigned char buffer[128*8];
+extern volatile unsigned char buffer[128 * 8];
 
 void ssd1306_rst_init(void)
 {
@@ -80,16 +80,16 @@ void OLED_SetContrast(uint8_t contrast)
 }
 
 void OLED_send_cmd(uint8_t cmd)
-{    
+{
     while (LL_I2C_IsActiveFlag_BUSY(I2C) != RESET);
     LL_I2C_HandleTransfer(I2C, OLED_ADDRESS, LL_I2C_ADDRSLAVE_7BIT, 2, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE);
 
     while (LL_I2C_IsActiveFlag_TXIS(I2C) == RESET);
     LL_I2C_TransmitData8(I2C, 0x00);
-    
+
     while (LL_I2C_IsActiveFlag_TXIS(I2C) == RESET);
     LL_I2C_TransmitData8(I2C, cmd);
-    
+
     while (LL_I2C_IsActiveFlag_STOP(I2C) == RESET);
     LL_I2C_ClearFlag_STOP(I2C);
 }
@@ -102,19 +102,19 @@ void ssd1306_Update_display(void)
         OLED_send_cmd(0xB0 | p);
         OLED_send_cmd(0x00 + ((0x10 & 0x0F)*16 + 0x00) % 16);
         OLED_send_cmd(0x10 + ((0x10 & 0x0F)*16 + 0x00) / 16);
-        
+
         while (LL_I2C_IsActiveFlag_BUSY(I2C) != RESET);
         LL_I2C_HandleTransfer(I2C, OLED_ADDRESS, LL_I2C_ADDRSLAVE_7BIT, 129, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE);
-        
+
         while (LL_I2C_IsActiveFlag_TXIS(I2C) == RESET);
         LL_I2C_TransmitData8(I2C, 0x40);
-       
-    
+
+
         for (i = 0; i < 128; i++) {
             while (LL_I2C_IsActiveFlag_TXIS(I2C) == RESET);
             LL_I2C_TransmitData8(I2C, buffer[x++]);
         }
-        
+
         while (LL_I2C_IsActiveFlag_STOP(I2C) == RESET);
         LL_I2C_ClearFlag_STOP(I2C);
     }

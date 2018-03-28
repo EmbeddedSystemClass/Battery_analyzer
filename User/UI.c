@@ -179,7 +179,7 @@ void show_idle_window(void)
 
 
 
-    smart_siprintf(textbuff, ("Proud: %d.%03dA\r\nNapětí: %d.%1dV\r\nPříkon: %d.%03dW\r\nPF: %s\r\nSpotřeba:", 1, 2,  2, 3, 5, 4, 8, 5, 5));
+    smart_siprintf(textbuff, ("Proud: %d.%03dA\r\nNapětí: %d.%1dV\r\nPříkon: %d.%03dW\r\nPF: %s\r\nSpotřeba:", 1, 2, 2, 3, 5, 4, 8, 5, 5));
     UG_PutString(0, 0, textbuff);
     UG_FontSelect(&FONT_10X16);
     smart_siprintf(textbuff, ("%d.%03dWh\r\n", 1, 2));
