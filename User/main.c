@@ -74,6 +74,7 @@ int main(void)
     LEDS_show();
     
     Inputs_BTN_Init();
+    Inputs_ADC_Init();
 
     ssd1306_rst();
 
