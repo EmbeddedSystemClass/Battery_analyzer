@@ -12,7 +12,7 @@ void TIM3_Init(void)
  
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM3);
   
-  TIM_InitStruct.Prescaler = 0;
+  TIM_InitStruct.Prescaler = 10;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
   TIM_InitStruct.Autoreload = 0x4560;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
