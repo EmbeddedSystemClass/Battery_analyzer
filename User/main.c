@@ -33,6 +33,7 @@
 #include "ssd1306.h"
 #include "ugui.h"
 #include "UI.h"
+#include "inputs.h"
 
 static void LL_Init(void);
 static void SystemClock_Config(void);
@@ -71,6 +72,8 @@ int main(void)
 
     LEDS_setColor((uint8_t[]) COLOR_YELLOW);
     LEDS_show();
+    
+    Inputs_BTN_Init();
 
     ssd1306_rst();
 

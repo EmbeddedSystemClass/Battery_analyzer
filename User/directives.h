@@ -6,6 +6,7 @@
 #define DEBUGGING
     #define DEBUG_INIT          SMART_DEBUG_ON
     #define DEBUG_I2C           SMART_DEBUG_ON
+    #define DEBUG_BTN           SMART_DEBUG_ON
 
 #define USE_WDT     (1)
 
@@ -16,5 +17,11 @@
 #define COLOR_ORANGE COLOR(132, 92, 0)
 #define COLOR_YELLOW COLOR(50, 50, 0)
 
+#define BTN_OK_MASK       0x1
+#define BTN_LEFT_MASK     0x2
+#define BTN_RIGHT_MASK    0x4
+#define BTN_UP_MASK       0x8
+#define BTN_DOWN_MASK     0x10
+#define BTN_STOP_MASK     0x20
 
 #endif /* DIRECTIVES_H */
