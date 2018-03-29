@@ -34,6 +34,7 @@
 #include "ugui.h"
 #include "UI.h"
 #include "inputs.h"
+#include "internal_timer.h"
 
 static void LL_Init(void);
 static void SystemClock_Config(void);
@@ -73,6 +74,7 @@ int main(void)
     LEDS_setColor((uint8_t[]) COLOR_YELLOW);
     LEDS_show();
     
+    TIM3_Init();
     Inputs_BTN_Init();
     Inputs_ADC_Init();
 

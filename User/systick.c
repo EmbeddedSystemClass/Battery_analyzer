@@ -1,5 +1,6 @@
 #include "systick.h"
 #include "debug.h"
+#include "inputs.h"
 
 volatile uint32_t millis_cnt = 0;
 volatile uint32_t CLK1MS = 0;
@@ -18,6 +19,7 @@ void SysTick_Handler(void)
         delay_time--;
     if (!(CLK1MS % 1000)) {
         CLK1S++;
+        Inputs_ADC_printValues();
     }
 }
 

@@ -35,6 +35,8 @@ void Inputs_ADC_Init(void);
 
 void ADC_Value(void);
 
+void Inputs_ADC_printValues(void);
+
 void Inputs_BTN_Init(void);
 
 uint8_t Inputs_BTN_getBtn(void);
