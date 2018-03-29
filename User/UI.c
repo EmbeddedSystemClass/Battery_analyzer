@@ -179,10 +179,10 @@ void show_idle_window(void)
 
 
 
-    smart_siprintf(textbuff, ("Proud: %d.%03dA\r\nNapětí: %d.%1dV\r\nPříkon: %d.%03dW\r\nPF: %s\r\nSpotřeba:", 1, 2, 2, 3, 5, 4, 8, 5, 5));
+    smart_siprintf(textbuff, "Proud: %d.%03dA\r\nNapětí: %d.%1dV\r\nPříkon: %d.%03dW\r\nPF: %s\r\nSpotřeba:", 1, 2, 2, 3, 5, 4, 8, 5, 5);
     UG_PutString(0, 0, textbuff);
     UG_FontSelect(&FONT_10X16);
-    smart_siprintf(textbuff, ("%d.%03dWh\r\n", 1, 2));
+    smart_siprintf(textbuff, "%d.%03dWh\r\n", 1, 2);
     UG_PutString(2, 48, textbuff);
 }
 
@@ -196,13 +196,13 @@ void show_main_window(uint32_t tlacitko)
     UG_FillScreen(0);
 
     UG_FontSelect(&FONT_5X12);
-    smart_siprintf(textbuff, ("%02d.%02d.%04d", 1, 2, 3 + 2000));
+    smart_siprintf(textbuff, "%02d.%02d.%04d", 1, 2, 3 + 2000);
     UG_PutString(0, 0, textbuff);
 
     if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
     else add_picture_wifi(picture_wifi_off);
 
-    smart_siprintf(textbuff, ("%02d:%02d:%02d", 4, 5, 6));
+    smart_siprintf(textbuff, "%02d:%02d:%02d", 4, 5, 6);
     UG_PutString(80, 0, textbuff);
 
     UG_FontSelect(&FONT_10X16);
@@ -248,13 +248,13 @@ void show_settings_window(uint32_t tlacitko)
     UG_FillScreen(0);
 
     UG_FontSelect(&FONT_5X12);
-    smart_siprintf(textbuff, ("%02d.%02d.%04d", 8, 9, 10 + 2000));
+    smart_siprintf(textbuff, "%02d.%02d.%04d", 8, 9, 10 + 2000);
     UG_PutString(0, 0, textbuff);
 
     if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
     else add_picture_wifi(picture_wifi_off);
 
-    smart_siprintf(textbuff, ("%02d:%02d:%02d", 5, 4, 3));
+    smart_siprintf(textbuff, "%02d:%02d:%02d", 5, 4, 3);
     UG_PutString(80, 0, textbuff);
 
     UG_FontSelect(&FONT_10X16);
@@ -340,13 +340,13 @@ void show_settings_brightness_window(uint32_t tlacitko)
     UG_FillScreen(0);
 
     UG_FontSelect(&FONT_5X12);
-    smart_siprintf(textbuff, ("%02d.%02d.%04d", 4, 5, 6 + 2000));
+    smart_siprintf(textbuff, "%02d.%02d.%04d", 4, 5, 6 + 2000);
     UG_PutString(0, 0, textbuff);
 
     if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
     else add_picture_wifi(picture_wifi_off);
 
-    smart_siprintf(textbuff, ("%02d:%02d:%02d", 1, 2, 3));
+    smart_siprintf(textbuff, "%02d:%02d:%02d", 1, 2, 3);
     UG_PutString(80, 0, textbuff);
 
     UG_FontSelect(&FONT_6X8_CZECH);
@@ -392,13 +392,13 @@ void show_settings_brightness_display_window(uint32_t tlacitko)
     UG_FillScreen(0);
 
     UG_FontSelect(&FONT_5X12);
-    smart_siprintf(textbuff, ("%02d.%02d.%04d", 8, 9, 1 + 2000));
+    smart_siprintf(textbuff, "%02d.%02d.%04d", 8, 9, 1 + 2000);
     UG_PutString(0, 0, textbuff);
 
     if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
     else add_picture_wifi(picture_wifi_off);
 
-    smart_siprintf(textbuff, ("%02d:%02d:%02d", 3, 4, 5));
+    smart_siprintf(textbuff, "%02d:%02d:%02d", 3, 4, 5);
     UG_PutString(80, 0, textbuff);
 
     UG_DrawFrame(14, 15, 114, 27, 1);
@@ -444,13 +444,13 @@ void show_settings_brightness_leds_window(uint32_t tlacitko)
     UG_FillScreen(0);
 
     UG_FontSelect(&FONT_5X12);
-    smart_siprintf(textbuff, ("%02d.%02d.%04d", 1, 4, 7 + 2000));
+    smart_siprintf(textbuff, "%02d.%02d.%04d", 1, 4, 7 + 2000);
     UG_PutString(0, 0, textbuff);
 
     if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
     else add_picture_wifi(picture_wifi_off);
 
-    smart_siprintf(textbuff, ("%02d:%02d:%02d", 9, 6, 3));
+    smart_siprintf(textbuff, "%02d:%02d:%02d", 9, 6, 3);
     UG_PutString(80, 0, textbuff);
 
     UG_DrawFrame(14, 15, 114, 27, 1);
