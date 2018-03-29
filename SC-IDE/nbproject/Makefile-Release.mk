@@ -58,6 +58,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/58d20332/delay_us.o \
 	${OBJECTDIR}/_ext/58d20332/iprintf.o \
 	${OBJECTDIR}/_ext/58d20332/queue.o \
+	${OBJECTDIR}/_ext/58d20332/timer.o \
 	${OBJECTDIR}/_ext/58d20332/ugui.o \
 	${OBJECTDIR}/_ext/413f9488/LEDS.o \
 	${OBJECTDIR}/_ext/413f9488/eeprom.o \
@@ -67,8 +68,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
 	${OBJECTDIR}/_ext/d29c42da/main.o \
-	${OBJECTDIR}/_ext/d29c42da/systick.o \
-	${OBJECTDIR}/_ext/d29c42da/timer.o
+	${OBJECTDIR}/_ext/d29c42da/systick.o
 
 
 # C Compiler Flags
@@ -209,6 +209,11 @@ ${OBJECTDIR}/_ext/58d20332/queue.o: ../Middlewares/queue.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/queue.o ../Middlewares/queue.c
 
+${OBJECTDIR}/_ext/58d20332/timer.o: ../Middlewares/timer.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/timer.o ../Middlewares/timer.c
+
 ${OBJECTDIR}/_ext/58d20332/ugui.o: ../Middlewares/ugui.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
@@ -258,11 +263,6 @@ ${OBJECTDIR}/_ext/d29c42da/systick.o: ../User/systick.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/systick.o ../User/systick.c
-
-${OBJECTDIR}/_ext/d29c42da/timer.o: ../User/timer.c
-	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/timer.o ../User/timer.c
 
 # Subprojects
 .build-subprojects:
