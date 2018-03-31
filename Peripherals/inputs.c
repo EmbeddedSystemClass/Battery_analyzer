@@ -84,7 +84,6 @@ void Inputs_ADC_Init(void)
 {
     LL_ADC_InitTypeDef ADC_InitStruct;
     LL_ADC_REG_InitTypeDef ADC_REG_InitStruct;
-    ADC_Common_TypeDef ADC_CommonStruct;
     LL_DMA_InitTypeDef DMA_InitStruct;
 
     LL_GPIO_InitTypeDef GPIO_InitStruct;
@@ -171,7 +170,7 @@ void Inputs_ADC_Init(void)
     LL_ADC_REG_Init(ADC1, &ADC_REG_InitStruct);
 
     TIM3_Enable();
-    SMART_DEBUGF(SMART_DEBUG_ON, ("ADC calibrate0 %ld\r\n", ADC1->DR));
+    SMART_DEBUGF(DEBUG_ADC, ("ADC calibrate ...", ADC1->DR));
 
     if ((ADC1->CR & ADC_CR_ADEN) != 0) {
         ADC1->CR |= ADC_CR_ADDIS;
@@ -185,7 +184,7 @@ void Inputs_ADC_Init(void)
         /* For robust implementation, add here time-out management */
     }
 
-    SMART_DEBUGF(SMART_DEBUG_ON, ("ADC calibrate1 %ld\r\n", ADC1->DR));
+    SMART_DEBUGF(DEBUG_ADC, ("calibration value: %ld\r\n", ADC1->DR));
 
     LL_ADC_Enable(ADC1);
     LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_1);
@@ -201,7 +200,7 @@ void Inputs_ADC_Init(void)
 
     ADC->CCR |= ADC_CCR_VREFEN | ADC_CCR_TSEN; //enable VrefInt, cpu temperature
 
-    SMART_DEBUGF(SMART_DEBUG_ON, ("chanels: %d\r\n", ADC_CHANNELS));
+    SMART_DEBUGF(DEBUG_ADC, ("ADC chanels: %d\r\n", ADC_CHANNELS));
 
 }
 
@@ -230,9 +229,9 @@ void Inputs_ADC_printValues(void)
     uint32_t val = __LL_ADC_CALC_VREFANALOG_VOLTAGE(apply_Q(ADC_Val[ADC_VREF]), LL_ADC_RESOLUTION_12B);
     for (uint8_t i = 0; i < ADC_CHANNELS; i++) {
         if (i == ADC_CPUTEMP)
-            SMART_DEBUGF(SMART_DEBUG_ON, ("ADC ch%d val %ld, temp %ld deg\r\n", i, apply_Q(ADC_Val[i]), __LL_ADC_CALC_TEMPERATURE(val, apply_Q(ADC_Val[i]), LL_ADC_RESOLUTION_12B)));
+            SMART_DEBUGF(DEBUG_ADC, ("ADC ch%d val %ld, temp %ld deg\r\n", i, apply_Q(ADC_Val[i]), __LL_ADC_CALC_TEMPERATURE(val, apply_Q(ADC_Val[i]), LL_ADC_RESOLUTION_12B)));
         else
-            SMART_DEBUGF(SMART_DEBUG_ON, ("ADC ch%d val %ld, vtg %ld mV\r\n", i, apply_Q(ADC_Val[i]), __LL_ADC_CALC_DATA_TO_VOLTAGE(val, apply_Q(ADC_Val[i]), LL_ADC_RESOLUTION_12B)));
+            SMART_DEBUGF(DEBUG_ADC, ("ADC ch%d val %ld, vtg %ld mV\r\n", i, apply_Q(ADC_Val[i]), __LL_ADC_CALC_DATA_TO_VOLTAGE(val, apply_Q(ADC_Val[i]), LL_ADC_RESOLUTION_12B)));
     }
 
 }
@@ -241,11 +240,6 @@ void DMA1_Channel1_IRQHandler(void)
 {
     if (LL_DMA_IsActiveFlag_TC1(DMA1)) {
         LL_ADC_REG_StartConversion(ADC1);
-        //        ADC_Val[0] -= apply_Q(ADC_Val[0]);
-        //        ADC_Val[0] += ADC_ConvertedValue[0];
-        //        ADC_Val[1] -= apply_Q(ADC_Val[1]);
-        //        ADC_Val[1] += ADC_ConvertedValue[1];
-        //        SMART_DEBUGF(SMART_DEBUG_ON, ("%ld;%ld\r\n", i, ADC_ConvertedValue[0]));
         for (uint32_t i = 0; i < ADC_CHANNELS; i++) {
             ADC_Val[i] -= apply_Q(ADC_Val[i]);
             ADC_Val[i] += ADC_ConvertedValue[i];

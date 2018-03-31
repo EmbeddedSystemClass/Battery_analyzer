@@ -19,7 +19,9 @@ void SysTick_Handler(void)
         delay_time--;
     if (!(CLK1MS % 1000)) {
         CLK1S++;
+#ifdef DBG_PRINT_ADC_EVERY_SECOND
         Inputs_ADC_printValues();
+#endif
     }
 }
 
