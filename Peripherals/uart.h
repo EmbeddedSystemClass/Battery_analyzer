@@ -18,6 +18,10 @@
 #include "stm32f0xx_ll_bus.h"
 #include "stm32f0xx_ll_usart.h"
 
+#define RXBUFFERSIZE    50
+extern struct Queue_s Rx;
+extern uint8_t RxBuffer[RXBUFFERSIZE];
+extern uint8_t RxCount;
 /**
  * Initialize low level extender USART
  * speed: 57600
@@ -29,5 +33,8 @@ void Uart_LL_init(void);
  * @param ch sended character
  */
 void uart_putchar(int ch);
+
+int uart_getChar(void);
+void uart_clearRxBuffer(void);
 
 #endif /* UART_H */

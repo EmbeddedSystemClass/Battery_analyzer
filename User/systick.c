@@ -1,6 +1,7 @@
 #include "systick.h"
 #include "debug.h"
 #include "inputs.h"
+#include "mySCPI.h"
 
 volatile uint32_t millis_cnt = 0;
 volatile uint32_t CLK1MS = 0;
@@ -19,6 +20,8 @@ void SysTick_Handler(void)
         delay_time--;
     if (!(CLK1MS % 1000)) {
         CLK1S++;
+        if (state)
+            mySCPI_processInput();
 #ifdef DBG_PRINT_ADC_EVERY_SECOND
         Inputs_ADC_printValues();
 #endif

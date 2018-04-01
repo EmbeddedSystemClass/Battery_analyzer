@@ -374,9 +374,9 @@ const scpi_command_t scpi_commands[] = {
     { .pattern = "*WAI", .callback = SCPI_CoreWai,},
 
     /* Required SCPI commands (SCPI std V1999.0 4.2.1) */
-    {.pattern = "SYSTem:ERRor[:NEXT]?", .callback = SCPI_SystemErrorNextQ,},
-    {.pattern = "SYSTem:ERRor:COUNt?", .callback = SCPI_SystemErrorCountQ,},
-    {.pattern = "SYSTem:VERSion?", .callback = SCPI_SystemVersionQ,},
+//    {.pattern = "SYSTem:ERRor[:NEXT]?", .callback = SCPI_SystemErrorNextQ,},
+//    {.pattern = "SYSTem:ERRor:COUNt?", .callback = SCPI_SystemErrorCountQ,},
+//    {.pattern = "SYSTem:VERSion?", .callback = SCPI_SystemVersionQ,},
 
     /* {.pattern = "STATus:OPERation?", .callback = scpi_stub_callback,}, */
     /* {.pattern = "STATus:OPERation:EVENt?", .callback = scpi_stub_callback,}, */
@@ -384,33 +384,33 @@ const scpi_command_t scpi_commands[] = {
     /* {.pattern = "STATus:OPERation:ENABle", .callback = scpi_stub_callback,}, */
     /* {.pattern = "STATus:OPERation:ENABle?", .callback = scpi_stub_callback,}, */
 
-    {.pattern = "STATus:QUEStionable[:EVENt]?", .callback = SCPI_StatusQuestionableEventQ,},
+//    {.pattern = "STATus:QUEStionable[:EVENt]?", .callback = SCPI_StatusQuestionableEventQ,},
     /* {.pattern = "STATus:QUEStionable:CONDition?", .callback = scpi_stub_callback,}, */
-    {.pattern = "STATus:QUEStionable:ENABle", .callback = SCPI_StatusQuestionableEnable,},
-    {.pattern = "STATus:QUEStionable:ENABle?", .callback = SCPI_StatusQuestionableEnableQ,},
-
-    {.pattern = "STATus:PRESet", .callback = SCPI_StatusPreset,},
+//    {.pattern = "STATus:QUEStionable:ENABle", .callback = SCPI_StatusQuestionableEnable,},
+//    {.pattern = "STATus:QUEStionable:ENABle?", .callback = SCPI_StatusQuestionableEnableQ,},
+//
+//    {.pattern = "STATus:PRESet", .callback = SCPI_StatusPreset,},
 
     /* DMM */
-    {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
-    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
-    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
-    {.pattern = "MEASure:CURRent:DC?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
+//    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
+//    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
+//    {.pattern = "MEASure:CURRent:DC?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
 
-    {.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
+//    {.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
 
-    {.pattern = "TEST:BOOL", .callback = TEST_Bool,},
-    {.pattern = "TEST:CHOice?", .callback = TEST_ChoiceQ,},
-    {.pattern = "TEST#:NUMbers#", .callback = TEST_Numbers,},
+//    {.pattern = "TEST:BOOL", .callback = TEST_Bool,},
+//    {.pattern = "TEST:CHOice?", .callback = TEST_ChoiceQ,},
+//    {.pattern = "TEST#:NUMbers#", .callback = TEST_Numbers,},
     {.pattern = "TEST:TEXT", .callback = TEST_Text,},
-    {.pattern = "TEST:ARBitrary?", .callback = TEST_ArbQ,},
-    {.pattern = "TEST:CHANnellist", .callback = TEST_Chanlst,},
+//    {.pattern = "TEST:ARBitrary?", .callback = TEST_ArbQ,},
+//    {.pattern = "TEST:CHANnellist", .callback = TEST_Chanlst,},
 
     SCPI_CMD_LIST_END
 };

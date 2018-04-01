@@ -3,7 +3,7 @@
 
 #include "scpi/scpi.h"
 
-#define SCPI_INPUT_BUFFER_LENGTH 256
+#define SCPI_INPUT_BUFFER_LENGTH 50
 #define SCPI_ERROR_QUEUE_SIZE 17
 #define SCPI_IDN1 "FEKT-BUT"
 #define SCPI_IDN2 "BATTERY_ANALYZER"

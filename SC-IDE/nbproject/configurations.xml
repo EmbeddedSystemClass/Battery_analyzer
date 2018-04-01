@@ -80,6 +80,7 @@
         <itemPath>../Peripherals/i2c.h</itemPath>
         <itemPath>../Peripherals/inputs.h</itemPath>
         <itemPath>../Peripherals/internal_timer.h</itemPath>
+        <itemPath>../Peripherals/mySCPI.h</itemPath>
         <itemPath>../Peripherals/ssd1306.h</itemPath>
         <itemPath>../Peripherals/uart.h</itemPath>
       </logicalFolder>
@@ -156,6 +157,7 @@
         <itemPath>../Peripherals/i2c.c</itemPath>
         <itemPath>../Peripherals/inputs.c</itemPath>
         <itemPath>../Peripherals/internal_timer.c</itemPath>
+        <itemPath>../Peripherals/mySCPI.c</itemPath>
         <itemPath>../Peripherals/ssd1306.c</itemPath>
         <itemPath>../Peripherals/uart.c</itemPath>
       </logicalFolder>
@@ -207,7 +209,7 @@
             <pElem>../Middlewares/libscpi/inc</pElem>
             <pElem>../Middlewares/libscpi/src</pElem>
           </incDir>
-          <commandLine>-Og -g3 -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function -Wimplicit -Werror=implicit-function-declaration -fno-common</commandLine>
+          <commandLine>-Os -g3 -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function -Wimplicit -Werror=implicit-function-declaration -fno-common</commandLine>
           <preprocessorList>
             <Elem>STM32F030C8T6</Elem>
             <Elem>STM32F030x8</Elem>
@@ -633,6 +635,10 @@
       <item path="../Peripherals/internal_timer.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../Peripherals/internal_timer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Peripherals/mySCPI.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Peripherals/mySCPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Peripherals/ssd1306.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -1112,6 +1118,10 @@
       <item path="../Peripherals/internal_timer.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../Peripherals/internal_timer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Peripherals/mySCPI.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Peripherals/mySCPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Peripherals/ssd1306.c" ex="false" tool="0" flavor2="0">
       </item>

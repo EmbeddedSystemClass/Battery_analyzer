@@ -75,6 +75,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/i2c.o \
 	${OBJECTDIR}/_ext/413f9488/inputs.o \
 	${OBJECTDIR}/_ext/413f9488/internal_timer.o \
+	${OBJECTDIR}/_ext/413f9488/mySCPI.o \
 	${OBJECTDIR}/_ext/413f9488/ssd1306.o \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
@@ -84,7 +85,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections -Og -g3 -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function -Wimplicit -Werror=implicit-function-declaration -fno-common
+CFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections -Os -g3 -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function -Wimplicit -Werror=implicit-function-declaration -fno-common
 
 # CC Compiler Flags
 CCFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections -fno-rtti -fno-exceptions -fno-threadsafe-statics
@@ -305,6 +306,11 @@ ${OBJECTDIR}/_ext/413f9488/internal_timer.o: ../Peripherals/internal_timer.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
 	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/internal_timer.o ../Peripherals/internal_timer.c
+
+${OBJECTDIR}/_ext/413f9488/mySCPI.o: ../Peripherals/mySCPI.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/mySCPI.o ../Peripherals/mySCPI.c
 
 ${OBJECTDIR}/_ext/413f9488/ssd1306.o: ../Peripherals/ssd1306.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488

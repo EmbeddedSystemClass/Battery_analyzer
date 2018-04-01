@@ -14,6 +14,8 @@
 
 #include "stm32f0xx.h"
 
+extern uint8_t state;
+
 /**
  * SysTick Handler, called every 1ms internaly
  */

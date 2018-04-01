@@ -75,6 +75,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/i2c.o \
 	${OBJECTDIR}/_ext/413f9488/inputs.o \
 	${OBJECTDIR}/_ext/413f9488/internal_timer.o \
+	${OBJECTDIR}/_ext/413f9488/mySCPI.o \
 	${OBJECTDIR}/_ext/413f9488/ssd1306.o \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
@@ -305,6 +306,11 @@ ${OBJECTDIR}/_ext/413f9488/internal_timer.o: ../Peripherals/internal_timer.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/internal_timer.o ../Peripherals/internal_timer.c
+
+${OBJECTDIR}/_ext/413f9488/mySCPI.o: ../Peripherals/mySCPI.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/mySCPI.o ../Peripherals/mySCPI.c
 
 ${OBJECTDIR}/_ext/413f9488/ssd1306.o: ../Peripherals/ssd1306.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488

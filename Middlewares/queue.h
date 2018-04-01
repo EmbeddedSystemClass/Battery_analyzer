@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define QUEUE_SIZE 10 /**< Queue size */
+#define QUEUE_SIZE 100 /**< Queue size */
 
 /**
  * @brief Enumerator of queue flags
