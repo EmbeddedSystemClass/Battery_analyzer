@@ -19,9 +19,7 @@ void mySCPI_setEOL_detected(void)
 
 void mySCPI_processInput(void)
 {
-    if (EOL_detected) {
-        EOL_detected = 0;
-    }
-    SCPI_Input(&scpi_context, RxBuffer, RxCount);
+    scpi_bool_t result;
+    result = SCPI_Input(&scpi_context, RxBuffer, RxCount);
     uart_clearRxBuffer();
 }

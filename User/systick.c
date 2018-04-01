@@ -5,6 +5,7 @@
 
 volatile uint32_t millis_cnt = 0;
 volatile uint32_t CLK1MS = 0;
+volatile uint32_t CLK100MS = 0;
 volatile uint32_t CLK1S = 0;
 volatile uint32_t delay_time = 0;
 uint8_t state = 0;
@@ -19,9 +20,9 @@ void SysTick_Handler(void)
     if (delay_time)
         delay_time--;
     if (!(CLK1MS % 1000)) {
-        CLK1S++;
         if (state)
             mySCPI_processInput();
+        CLK1S++;
 #ifdef DBG_PRINT_ADC_EVERY_SECOND
         Inputs_ADC_printValues();
 #endif

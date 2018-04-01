@@ -83,11 +83,5 @@ void USART1_IRQHandler(void)
     if (LL_USART_IsActiveFlag_RXNE(UART_INSTANCE) != RESET) {
         uint8_t ch = LL_USART_ReceiveData8(UART_INSTANCE) & 0xff;
         RxBuffer[RxCount++] = ch;
-        if (ch == '\n')
-            mySCPI_setEOL_detected();
-//        if (!Enqueue(&Rx, ch))
-//            SetFlag(&Rx, QUEUE_FLAG_RXOVERFLOW);
-//        if (ch == '\n')
-//            mySCPI_setEOL_detected();
     }
 }
