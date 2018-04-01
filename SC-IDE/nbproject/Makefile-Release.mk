@@ -58,6 +58,16 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/58d20332/delay_us.o \
 	${OBJECTDIR}/_ext/58d20332/iprintf.o \
 	${OBJECTDIR}/_ext/58d20332/queue.o \
+	${OBJECTDIR}/_ext/36baa535/scpi-def.o \
+	${OBJECTDIR}/_ext/f4d716da/error.o \
+	${OBJECTDIR}/_ext/f4d716da/expression.o \
+	${OBJECTDIR}/_ext/f4d716da/fifo.o \
+	${OBJECTDIR}/_ext/f4d716da/ieee488.o \
+	${OBJECTDIR}/_ext/f4d716da/lexer.o \
+	${OBJECTDIR}/_ext/f4d716da/minimal.o \
+	${OBJECTDIR}/_ext/f4d716da/parser.o \
+	${OBJECTDIR}/_ext/f4d716da/units.o \
+	${OBJECTDIR}/_ext/f4d716da/utils.o \
 	${OBJECTDIR}/_ext/58d20332/timer.o \
 	${OBJECTDIR}/_ext/58d20332/ugui.o \
 	${OBJECTDIR}/_ext/413f9488/LEDS.o \
@@ -209,6 +219,56 @@ ${OBJECTDIR}/_ext/58d20332/queue.o: ../Middlewares/queue.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/queue.o ../Middlewares/queue.c
+
+${OBJECTDIR}/_ext/36baa535/scpi-def.o: ../Middlewares/scpi-parser/libscpi/common/scpi-def.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/36baa535
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/36baa535/scpi-def.o ../Middlewares/scpi-parser/libscpi/common/scpi-def.c
+
+${OBJECTDIR}/_ext/f4d716da/error.o: ../Middlewares/scpi-parser/libscpi/src/error.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/error.o ../Middlewares/scpi-parser/libscpi/src/error.c
+
+${OBJECTDIR}/_ext/f4d716da/expression.o: ../Middlewares/scpi-parser/libscpi/src/expression.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/expression.o ../Middlewares/scpi-parser/libscpi/src/expression.c
+
+${OBJECTDIR}/_ext/f4d716da/fifo.o: ../Middlewares/scpi-parser/libscpi/src/fifo.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/fifo.o ../Middlewares/scpi-parser/libscpi/src/fifo.c
+
+${OBJECTDIR}/_ext/f4d716da/ieee488.o: ../Middlewares/scpi-parser/libscpi/src/ieee488.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/ieee488.o ../Middlewares/scpi-parser/libscpi/src/ieee488.c
+
+${OBJECTDIR}/_ext/f4d716da/lexer.o: ../Middlewares/scpi-parser/libscpi/src/lexer.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/lexer.o ../Middlewares/scpi-parser/libscpi/src/lexer.c
+
+${OBJECTDIR}/_ext/f4d716da/minimal.o: ../Middlewares/scpi-parser/libscpi/src/minimal.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/minimal.o ../Middlewares/scpi-parser/libscpi/src/minimal.c
+
+${OBJECTDIR}/_ext/f4d716da/parser.o: ../Middlewares/scpi-parser/libscpi/src/parser.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/parser.o ../Middlewares/scpi-parser/libscpi/src/parser.c
+
+${OBJECTDIR}/_ext/f4d716da/units.o: ../Middlewares/scpi-parser/libscpi/src/units.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/units.o ../Middlewares/scpi-parser/libscpi/src/units.c
+
+${OBJECTDIR}/_ext/f4d716da/utils.o: ../Middlewares/scpi-parser/libscpi/src/utils.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f4d716da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f4d716da/utils.o ../Middlewares/scpi-parser/libscpi/src/utils.c
 
 ${OBJECTDIR}/_ext/58d20332/timer.o: ../Middlewares/timer.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
