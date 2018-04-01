@@ -52,10 +52,25 @@
         <itemPath>../Interfaces/ws2812b.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="Middlewares" projectFiles="true">
+        <logicalFolder name="f1" displayName="scpi" projectFiles="true">
+          <itemPath>../Middlewares/libscpi/inc/scpi/cc.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/config.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/constants.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/error.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/expression.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/ieee488.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/minimal.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/parser.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/scpi.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/types.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/units.h</itemPath>
+          <itemPath>../Middlewares/libscpi/inc/scpi/utils.h</itemPath>
+        </logicalFolder>
         <itemPath>../Middlewares/debug.h</itemPath>
         <itemPath>../Middlewares/delay_us.h</itemPath>
         <itemPath>../Middlewares/iprintf.h</itemPath>
         <itemPath>../Middlewares/queue.h</itemPath>
+        <itemPath>../Middlewares/scpi-def.h</itemPath>
         <itemPath>../Middlewares/timer.h</itemPath>
         <itemPath>../Middlewares/ugui.h</itemPath>
       </logicalFolder>
@@ -112,9 +127,26 @@
         <itemPath>../Interfaces/ws2812b.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="Middlewares" projectFiles="true">
+        <logicalFolder name="f1" displayName="scpi" projectFiles="true">
+          <itemPath>../Middlewares/libscpi/src/error.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/expression.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/fifo.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/fifo_private.h</itemPath>
+          <itemPath>../Middlewares/libscpi/src/ieee488.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/lexer.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/lexer_private.h</itemPath>
+          <itemPath>../Middlewares/libscpi/src/minimal.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/parser.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/parser_private.h</itemPath>
+          <itemPath>../Middlewares/libscpi/src/scpi.g</itemPath>
+          <itemPath>../Middlewares/libscpi/src/units.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/utils.c</itemPath>
+          <itemPath>../Middlewares/libscpi/src/utils_private.h</itemPath>
+        </logicalFolder>
         <itemPath>../Middlewares/delay_us.c</itemPath>
         <itemPath>../Middlewares/iprintf.c</itemPath>
         <itemPath>../Middlewares/queue.c</itemPath>
+        <itemPath>../Middlewares/scpi-def.c</itemPath>
         <itemPath>../Middlewares/timer.c</itemPath>
         <itemPath>../Middlewares/ugui.c</itemPath>
       </logicalFolder>
@@ -130,6 +162,7 @@
       <logicalFolder name="f2" displayName="User" projectFiles="true">
         <itemPath>../User/UI.c</itemPath>
         <itemPath>../User/main.c</itemPath>
+        <itemPath>../User/syscalls.c</itemPath>
         <itemPath>../User/systick.c</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -171,6 +204,8 @@
             <pElem>../Peripherals</pElem>
             <pElem>../Interfaces</pElem>
             <pElem>../User</pElem>
+            <pElem>../Middlewares/libscpi/inc</pElem>
+            <pElem>../Middlewares/libscpi/src</pElem>
           </incDir>
           <commandLine>-Og -g3 -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function -Wimplicit -Werror=implicit-function-declaration -fno-common</commandLine>
           <preprocessorList>
@@ -451,9 +486,125 @@
       </item>
       <item path="../Middlewares/iprintf.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../Middlewares/libscpi/inc/scpi/cc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/config.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/constants.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/error.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/expression.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/ieee488.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/minimal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/parser.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/scpi.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/units.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/utils.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/error.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/expression.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/fifo.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/fifo_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/ieee488.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/lexer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/lexer_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/minimal.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/parser.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/parser_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/scpi.g" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/units.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/utils.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/utils_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../Middlewares/queue.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../Middlewares/queue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Middlewares/scpi-def.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/scpi-def.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Middlewares/timer.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -502,6 +653,8 @@
       <item path="../User/pins.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../User/stm32f0xx_hal_conf.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../User/syscalls.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../User/systick.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -812,9 +965,125 @@
       </item>
       <item path="../Middlewares/iprintf.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../Middlewares/libscpi/inc/scpi/cc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/config.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/constants.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/error.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/expression.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/ieee488.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/minimal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/parser.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/scpi.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/units.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/inc/scpi/utils.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/error.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/expression.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/fifo.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/fifo_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/ieee488.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/lexer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/lexer_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/minimal.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/parser.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/parser_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/scpi.g" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/units.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/utils.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/libscpi/src/utils_private.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../Middlewares/queue.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../Middlewares/queue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Middlewares/scpi-def.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/scpi-def.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Middlewares/timer.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -863,6 +1132,8 @@
       <item path="../User/pins.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../User/stm32f0xx_hal_conf.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../User/syscalls.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../User/systick.c" ex="false" tool="0" flavor2="0">
       </item>

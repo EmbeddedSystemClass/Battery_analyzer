@@ -57,7 +57,17 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/aafdca29/ws2812b.o \
 	${OBJECTDIR}/_ext/58d20332/delay_us.o \
 	${OBJECTDIR}/_ext/58d20332/iprintf.o \
+	${OBJECTDIR}/_ext/df150946/error.o \
+	${OBJECTDIR}/_ext/df150946/expression.o \
+	${OBJECTDIR}/_ext/df150946/fifo.o \
+	${OBJECTDIR}/_ext/df150946/ieee488.o \
+	${OBJECTDIR}/_ext/df150946/lexer.o \
+	${OBJECTDIR}/_ext/df150946/minimal.o \
+	${OBJECTDIR}/_ext/df150946/parser.o \
+	${OBJECTDIR}/_ext/df150946/units.o \
+	${OBJECTDIR}/_ext/df150946/utils.o \
 	${OBJECTDIR}/_ext/58d20332/queue.o \
+	${OBJECTDIR}/_ext/58d20332/scpi-def.o \
 	${OBJECTDIR}/_ext/58d20332/timer.o \
 	${OBJECTDIR}/_ext/58d20332/ugui.o \
 	${OBJECTDIR}/_ext/413f9488/LEDS.o \
@@ -69,6 +79,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
 	${OBJECTDIR}/_ext/d29c42da/main.o \
+	${OBJECTDIR}/_ext/d29c42da/syscalls.o \
 	${OBJECTDIR}/_ext/d29c42da/systick.o
 
 
@@ -205,10 +216,60 @@ ${OBJECTDIR}/_ext/58d20332/iprintf.o: ../Middlewares/iprintf.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/iprintf.o ../Middlewares/iprintf.c
 
+${OBJECTDIR}/_ext/df150946/error.o: ../Middlewares/libscpi/src/error.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/error.o ../Middlewares/libscpi/src/error.c
+
+${OBJECTDIR}/_ext/df150946/expression.o: ../Middlewares/libscpi/src/expression.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/expression.o ../Middlewares/libscpi/src/expression.c
+
+${OBJECTDIR}/_ext/df150946/fifo.o: ../Middlewares/libscpi/src/fifo.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/fifo.o ../Middlewares/libscpi/src/fifo.c
+
+${OBJECTDIR}/_ext/df150946/ieee488.o: ../Middlewares/libscpi/src/ieee488.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/ieee488.o ../Middlewares/libscpi/src/ieee488.c
+
+${OBJECTDIR}/_ext/df150946/lexer.o: ../Middlewares/libscpi/src/lexer.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/lexer.o ../Middlewares/libscpi/src/lexer.c
+
+${OBJECTDIR}/_ext/df150946/minimal.o: ../Middlewares/libscpi/src/minimal.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/minimal.o ../Middlewares/libscpi/src/minimal.c
+
+${OBJECTDIR}/_ext/df150946/parser.o: ../Middlewares/libscpi/src/parser.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/parser.o ../Middlewares/libscpi/src/parser.c
+
+${OBJECTDIR}/_ext/df150946/units.o: ../Middlewares/libscpi/src/units.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/units.o ../Middlewares/libscpi/src/units.c
+
+${OBJECTDIR}/_ext/df150946/utils.o: ../Middlewares/libscpi/src/utils.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/utils.o ../Middlewares/libscpi/src/utils.c
+
 ${OBJECTDIR}/_ext/58d20332/queue.o: ../Middlewares/queue.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/queue.o ../Middlewares/queue.c
+
+${OBJECTDIR}/_ext/58d20332/scpi-def.o: ../Middlewares/scpi-def.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/scpi-def.o ../Middlewares/scpi-def.c
 
 ${OBJECTDIR}/_ext/58d20332/timer.o: ../Middlewares/timer.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
@@ -264,6 +325,11 @@ ${OBJECTDIR}/_ext/d29c42da/main.o: ../User/main.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/main.o ../User/main.c
+
+${OBJECTDIR}/_ext/d29c42da/syscalls.o: ../User/syscalls.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/syscalls.o ../User/syscalls.c
 
 ${OBJECTDIR}/_ext/d29c42da/systick.o: ../User/systick.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da

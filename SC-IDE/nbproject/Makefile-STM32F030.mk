@@ -57,7 +57,17 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/aafdca29/ws2812b.o \
 	${OBJECTDIR}/_ext/58d20332/delay_us.o \
 	${OBJECTDIR}/_ext/58d20332/iprintf.o \
+	${OBJECTDIR}/_ext/df150946/error.o \
+	${OBJECTDIR}/_ext/df150946/expression.o \
+	${OBJECTDIR}/_ext/df150946/fifo.o \
+	${OBJECTDIR}/_ext/df150946/ieee488.o \
+	${OBJECTDIR}/_ext/df150946/lexer.o \
+	${OBJECTDIR}/_ext/df150946/minimal.o \
+	${OBJECTDIR}/_ext/df150946/parser.o \
+	${OBJECTDIR}/_ext/df150946/units.o \
+	${OBJECTDIR}/_ext/df150946/utils.o \
 	${OBJECTDIR}/_ext/58d20332/queue.o \
+	${OBJECTDIR}/_ext/58d20332/scpi-def.o \
 	${OBJECTDIR}/_ext/58d20332/timer.o \
 	${OBJECTDIR}/_ext/58d20332/ugui.o \
 	${OBJECTDIR}/_ext/413f9488/LEDS.o \
@@ -69,6 +79,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
 	${OBJECTDIR}/_ext/d29c42da/main.o \
+	${OBJECTDIR}/_ext/d29c42da/syscalls.o \
 	${OBJECTDIR}/_ext/d29c42da/systick.o
 
 
@@ -103,172 +114,227 @@ ${OBJECTDIR}/_ext/71a66020/startup_stm32f030xc.o: ../Drivers/CMSIS/startup_stm32
 ${OBJECTDIR}/_ext/71a66020/system_stm32f0xx.o: ../Drivers/CMSIS/system_stm32f0xx.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/71a66020
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/71a66020/system_stm32f0xx.o ../Drivers/CMSIS/system_stm32f0xx.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/71a66020/system_stm32f0xx.o ../Drivers/CMSIS/system_stm32f0xx.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_hal.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_hal.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_hal.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_adc.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_adc.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_adc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_adc.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_adc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_adc.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_comp.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_comp.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_comp.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_comp.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_comp.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_comp.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_crc.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_crc.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_crc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_crc.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_crc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_crc.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_crs.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_crs.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_crs.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_crs.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_crs.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_crs.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_dac.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_dac.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_dac.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_dac.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_dac.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_dac.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_dma.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_dma.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_dma.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_dma.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_dma.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_dma.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_exti.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_exti.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_exti.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_exti.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_exti.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_exti.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_gpio.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_gpio.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_gpio.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_gpio.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_gpio.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_gpio.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_i2c.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_i2c.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_i2c.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_i2c.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_i2c.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_i2c.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_pwr.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_pwr.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_pwr.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_pwr.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_pwr.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_pwr.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_rcc.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_rcc.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_rcc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_rcc.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_rcc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_rcc.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_rtc.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_rtc.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_rtc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_rtc.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_rtc.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_rtc.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_spi.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_spi.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_spi.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_spi.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_spi.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_spi.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_tim.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_tim.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_tim.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_tim.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_tim.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_tim.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_usart.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_usart.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_usart.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_usart.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_usart.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_usart.c
 
 ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_utils.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_utils.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/7a539c06
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_utils.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_utils.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/7a539c06/stm32f0xx_ll_utils.o ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_utils.c
 
 ${OBJECTDIR}/_ext/aafdca29/ws2812b.o: ../Interfaces/ws2812b.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/aafdca29
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/aafdca29/ws2812b.o ../Interfaces/ws2812b.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/aafdca29/ws2812b.o ../Interfaces/ws2812b.c
 
 ${OBJECTDIR}/_ext/58d20332/delay_us.o: ../Middlewares/delay_us.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/delay_us.o ../Middlewares/delay_us.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/delay_us.o ../Middlewares/delay_us.c
 
 ${OBJECTDIR}/_ext/58d20332/iprintf.o: ../Middlewares/iprintf.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/iprintf.o ../Middlewares/iprintf.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/iprintf.o ../Middlewares/iprintf.c
+
+${OBJECTDIR}/_ext/df150946/error.o: ../Middlewares/libscpi/src/error.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/error.o ../Middlewares/libscpi/src/error.c
+
+${OBJECTDIR}/_ext/df150946/expression.o: ../Middlewares/libscpi/src/expression.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/expression.o ../Middlewares/libscpi/src/expression.c
+
+${OBJECTDIR}/_ext/df150946/fifo.o: ../Middlewares/libscpi/src/fifo.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/fifo.o ../Middlewares/libscpi/src/fifo.c
+
+${OBJECTDIR}/_ext/df150946/ieee488.o: ../Middlewares/libscpi/src/ieee488.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/ieee488.o ../Middlewares/libscpi/src/ieee488.c
+
+${OBJECTDIR}/_ext/df150946/lexer.o: ../Middlewares/libscpi/src/lexer.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/lexer.o ../Middlewares/libscpi/src/lexer.c
+
+${OBJECTDIR}/_ext/df150946/minimal.o: ../Middlewares/libscpi/src/minimal.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/minimal.o ../Middlewares/libscpi/src/minimal.c
+
+${OBJECTDIR}/_ext/df150946/parser.o: ../Middlewares/libscpi/src/parser.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/parser.o ../Middlewares/libscpi/src/parser.c
+
+${OBJECTDIR}/_ext/df150946/units.o: ../Middlewares/libscpi/src/units.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/units.o ../Middlewares/libscpi/src/units.c
+
+${OBJECTDIR}/_ext/df150946/utils.o: ../Middlewares/libscpi/src/utils.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/utils.o ../Middlewares/libscpi/src/utils.c
 
 ${OBJECTDIR}/_ext/58d20332/queue.o: ../Middlewares/queue.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/queue.o ../Middlewares/queue.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/queue.o ../Middlewares/queue.c
+
+${OBJECTDIR}/_ext/58d20332/scpi-def.o: ../Middlewares/scpi-def.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/scpi-def.o ../Middlewares/scpi-def.c
 
 ${OBJECTDIR}/_ext/58d20332/timer.o: ../Middlewares/timer.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/timer.o ../Middlewares/timer.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/timer.o ../Middlewares/timer.c
 
 ${OBJECTDIR}/_ext/58d20332/ugui.o: ../Middlewares/ugui.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/ugui.o ../Middlewares/ugui.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/ugui.o ../Middlewares/ugui.c
 
 ${OBJECTDIR}/_ext/413f9488/LEDS.o: ../Peripherals/LEDS.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/LEDS.o ../Peripherals/LEDS.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/LEDS.o ../Peripherals/LEDS.c
 
 ${OBJECTDIR}/_ext/413f9488/eeprom.o: ../Peripherals/eeprom.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/eeprom.o ../Peripherals/eeprom.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/eeprom.o ../Peripherals/eeprom.c
 
 ${OBJECTDIR}/_ext/413f9488/i2c.o: ../Peripherals/i2c.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/i2c.o ../Peripherals/i2c.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/i2c.o ../Peripherals/i2c.c
 
 ${OBJECTDIR}/_ext/413f9488/inputs.o: ../Peripherals/inputs.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/inputs.o ../Peripherals/inputs.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/inputs.o ../Peripherals/inputs.c
 
 ${OBJECTDIR}/_ext/413f9488/internal_timer.o: ../Peripherals/internal_timer.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/internal_timer.o ../Peripherals/internal_timer.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/internal_timer.o ../Peripherals/internal_timer.c
 
 ${OBJECTDIR}/_ext/413f9488/ssd1306.o: ../Peripherals/ssd1306.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/ssd1306.o ../Peripherals/ssd1306.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/ssd1306.o ../Peripherals/ssd1306.c
 
 ${OBJECTDIR}/_ext/413f9488/uart.o: ../Peripherals/uart.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/uart.o ../Peripherals/uart.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/uart.o ../Peripherals/uart.c
 
 ${OBJECTDIR}/_ext/d29c42da/UI.o: ../User/UI.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/UI.o ../User/UI.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/UI.o ../User/UI.c
 
 ${OBJECTDIR}/_ext/d29c42da/main.o: ../User/main.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/main.o ../User/main.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/main.o ../User/main.c
+
+${OBJECTDIR}/_ext/d29c42da/syscalls.o: ../User/syscalls.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/syscalls.o ../User/syscalls.c
 
 ${OBJECTDIR}/_ext/d29c42da/systick.o: ../User/systick.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
 	${RM} "$@.d"
-	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/systick.o ../User/systick.c
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/systick.o ../User/systick.c
 
 # Subprojects
 .build-subprojects:
