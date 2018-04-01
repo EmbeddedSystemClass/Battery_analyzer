@@ -202,7 +202,7 @@ void show_main_window(uint32_t tlacitko)
     if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
     else add_picture_wifi(picture_wifi_off);
 
-    smart_siprintf(textbuff, "%02d:%02d:%02d", 4, 5, 6);
+    smart_siprintf(textbuff, "%02d:%02d:%02d", 44, 45, 64);
     UG_PutString(80, 0, textbuff);
 
     UG_FontSelect(&FONT_10X16);

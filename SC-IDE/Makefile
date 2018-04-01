@@ -61,7 +61,7 @@ build: .build-post
 .build-post: .build-impl
 # Add your post 'build' code here...
 	${SIZE} ${CND_DISTDIR}/${CONF}/app.elf
-	${OBJCOPY} -O ihex ${CND_DISTDIR}/${CONF}/IGWE031601PCU.elf ${CND_DISTDIR}/${CONF}/app.hex
+	${OBJCOPY} -O ihex ${CND_DISTDIR}/${CONF}/app.elf ${CND_DISTDIR}/${CONF}/app.hex
 
 # clean
 clean: .clean-post
