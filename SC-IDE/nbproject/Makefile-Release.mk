@@ -21,7 +21,7 @@ FC=gfortran
 AS=arm-none-eabi-gcc
 
 # Macros
-CND_PLATFORM=GnuArmEmbedded-Generic
+CND_PLATFORM=GnuArmEmbedded_1-Generic
 CND_DLIB_EXT=so
 CND_CONF=Release
 CND_DISTDIR=dist

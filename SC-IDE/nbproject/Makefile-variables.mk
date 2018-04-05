@@ -7,21 +7,21 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # STM32F030 configuration
-CND_PLATFORM_STM32F030=GnuArmEmbedded-Generic
+CND_PLATFORM_STM32F030=GnuArmEmbedded_1-Generic
 CND_ARTIFACT_DIR_STM32F030=dist/STM32F030
 CND_ARTIFACT_NAME_STM32F030=app.elf
 CND_ARTIFACT_PATH_STM32F030=dist/STM32F030/app.elf
-CND_PACKAGE_DIR_STM32F030=dist/STM32F030/GnuArmEmbedded-Generic/package
+CND_PACKAGE_DIR_STM32F030=dist/STM32F030/GnuArmEmbedded_1-Generic/package
 CND_PACKAGE_NAME_STM32F030=sc-ide.tar
-CND_PACKAGE_PATH_STM32F030=dist/STM32F030/GnuArmEmbedded-Generic/package/sc-ide.tar
+CND_PACKAGE_PATH_STM32F030=dist/STM32F030/GnuArmEmbedded_1-Generic/package/sc-ide.tar
 # Release configuration
-CND_PLATFORM_Release=GnuArmEmbedded-Generic
-CND_ARTIFACT_DIR_Release=dist/Release/GnuArmEmbedded-Generic
+CND_PLATFORM_Release=GnuArmEmbedded_1-Generic
+CND_ARTIFACT_DIR_Release=dist/Release/GnuArmEmbedded_1-Generic
 CND_ARTIFACT_NAME_Release=sc-ide
-CND_ARTIFACT_PATH_Release=dist/Release/GnuArmEmbedded-Generic/sc-ide
-CND_PACKAGE_DIR_Release=dist/Release/GnuArmEmbedded-Generic/package
+CND_ARTIFACT_PATH_Release=dist/Release/GnuArmEmbedded_1-Generic/sc-ide
+CND_PACKAGE_DIR_Release=dist/Release/GnuArmEmbedded_1-Generic/package
 CND_PACKAGE_NAME_Release=sc-ide.tar
-CND_PACKAGE_PATH_Release=dist/Release/GnuArmEmbedded-Generic/package/sc-ide.tar
+CND_PACKAGE_PATH_Release=dist/Release/GnuArmEmbedded_1-Generic/package/sc-ide.tar
 #
 # include compiler specific variables
 #
