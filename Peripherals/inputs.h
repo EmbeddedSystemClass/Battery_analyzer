@@ -17,8 +17,8 @@
 #include "stm32f0xx_ll_pwr.h"
 #include "stm32f0xx_ll_bus.h"
 
-typedef enum {
-    ADC_BATT_VTG = 0,
+enum ADC_Channels_e {
+    ADC_V_BATT = 0,
     ADC_V_BUS,
     ADC_VCC_IN,
     ADC_DISCHARGE_CURR,
@@ -29,7 +29,7 @@ typedef enum {
     ADC_CPUTEMP,
     ADC_VREF,
     ADC_CHANNELS
-} ADC_Channels_e;
+};
  
 void Inputs_ADC_Init(void);
 
@@ -37,8 +37,14 @@ void ADC_Value(void);
 
 void Inputs_ADC_printValues(void);
 
+uint16_t Inputs_ADC_getRecalgulatedValue(enum ADC_Channels_e channel);
+
 void Inputs_BTN_Init(void);
 
 uint8_t Inputs_BTN_getBtn(void);
+
+uint8_t Inputs_BTN_isBtnPressed(uint8_t btnMask);
+
+void Inputs_BTN_clearBtnBuffer(void);
 
 #endif /* INPUTS_H */

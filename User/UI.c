@@ -1,6 +1,8 @@
 #include "UI.h"
 #include "stm32f0xx_ll_tim.h"
 #include "iprintf.h"
+#include "inputs.h"
+#include "directives.h"
 
 uint32_t main_state = MAIN_STATE_INITIALISATION;
 
@@ -66,7 +68,8 @@ void UI_process(void) //User Interface process
         break;
 
     case MAIN_WINDOW:
-        if (tlacitko == 4) {
+        if (Inputs_BTN_isBtnPressed(BTN_RIGHT_MASK)) {
+            Inputs_BTN_clearBtnBuffer();
             windows_state = MEASURE_WINDOW;
         } //pusteno tlacitko 1 = navrat na MEASURE
         if (tlacitko == 5) {
@@ -78,7 +81,8 @@ void UI_process(void) //User Interface process
                 //                RELAY(1);
             }
         } //pusteno tlacitko 2 = vypnout/zapnout vystup
-        if (tlacitko == 6) {
+        if (Inputs_BTN_isBtnPressed(BTN_LEFT_MASK)) {
+            Inputs_BTN_clearBtnBuffer();
             windows_state = SETTINGS_WINDOW;
         } //pusteno tlacitko 3 = nastaveni
         show_main_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
