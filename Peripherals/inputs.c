@@ -24,9 +24,21 @@ static void setPressedBtn(uint8_t btnMask)
 
 uint8_t Inputs_BTN_getBtn(void)
 {
-    uint8_t temp = pressed_btn;
+    return pressed_btn;
+}
+
+uint8_t Inputs_BTN_isBtnPressed(uint8_t btnMask)
+{
+    uint8_t mask = Inputs_BTN_getBtn();
+    if (mask & btnMask)
+        return 1;
+    else
+        return 0;
+}
+
+void Inputs_BTN_clearBtnBuffer(void)
+{
     pressed_btn = 0;
-    return temp;
 }
 
 void Inputs_BTN_Init(void)
@@ -206,8 +218,8 @@ void Inputs_ADC_Init(void)
 
 void ADC_Value(void)
 {
-//    static uint8_t i = 0;
-//    SMART_DEBUGF(SMART_DEBUG_ON, ("0 %ld %ld\r\n", ADC_ConvertedValue[0], apply_Q(ADC_Val[0])));
+    //    static uint8_t i = 0;
+    //    SMART_DEBUGF(SMART_DEBUG_ON, ("0 %ld %ld\r\n", ADC_ConvertedValue[0], apply_Q(ADC_Val[0])));
 
     //    SMART_DEBUGF(SMART_DEBUG_ON, ("1 %ld %ld\r\n", ADC_ConvertedValue[1], apply_Q(ADC_Val[1])));
     //    SMART_DEBUGF(SMART_DEBUG_ON, ("Calib int %ld\r\n", __LL_ADC_CALC_VREFANALOG_VOLTAGE(apply_Q(ADC_Val[1]), LL_ADC_RESOLUTION_12B)));
@@ -234,6 +246,40 @@ void Inputs_ADC_printValues(void)
             SMART_DEBUGF(DEBUG_ADC, ("ADC ch%d val %ld, vtg %ld mV\r\n", i, apply_Q(ADC_Val[i]), __LL_ADC_CALC_DATA_TO_VOLTAGE(val, apply_Q(ADC_Val[i]), LL_ADC_RESOLUTION_12B)));
     }
 
+}
+
+#define LTC6101_V_SENSE_CALCULATE(adc)  ((adc*100)/4990)
+
+/**
+ * @brief get ADC recalculate values
+ * @param channel from enum ADC_Channels_e
+ * @return value
+ */
+uint16_t Inputs_ADC_getRecalgulatedValue(enum ADC_Channels_e channel)
+{
+    uint32_t value = 0;
+    uint32_t ref = __LL_ADC_CALC_VREFANALOG_VOLTAGE(apply_Q(ADC_Val[ADC_VREF]), LL_ADC_RESOLUTION_12B);
+    uint32_t adc = __LL_ADC_CALC_DATA_TO_VOLTAGE(ref, apply_Q(ADC_Val[channel]), LL_ADC_RESOLUTION_12B);
+    switch (channel) {
+    case ADC_V_BUS:
+    case ADC_VCC_IN:
+    {
+        value = adc * 11;
+        break;
+    }
+    case ADC_DISCHARGE_CURR:
+    case ADC_CHARGE_CURR:
+    {
+        value = (LTC6101_V_SENSE_CALCULATE(adc)*100) / 30;
+        break;
+    }
+    case ADC_INTERNAL_THERMISTOR:
+    {
+        value = (uint16_t) adc;
+        break;
+    }
+    }
+    return (uint16_t) value;
 }
 
 void DMA1_Channel1_IRQHandler(void)

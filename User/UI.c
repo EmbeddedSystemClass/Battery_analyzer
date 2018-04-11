@@ -1,6 +1,9 @@
 #include "UI.h"
 #include "stm32f0xx_ll_tim.h"
 #include "iprintf.h"
+#include "inputs.h"
+#include "directives.h"
+#include "debug.h"
 
 uint32_t main_state = MAIN_STATE_INITIALISATION;
 
@@ -66,7 +69,8 @@ void UI_process(void) //User Interface process
         break;
 
     case MAIN_WINDOW:
-        if (tlacitko == 4) {
+        if (Inputs_BTN_isBtnPressed(BTN_RIGHT_MASK)) {
+            Inputs_BTN_clearBtnBuffer();
             windows_state = MEASURE_WINDOW;
         } //pusteno tlacitko 1 = navrat na MEASURE
         if (tlacitko == 5) {
@@ -78,80 +82,81 @@ void UI_process(void) //User Interface process
                 //                RELAY(1);
             }
         } //pusteno tlacitko 2 = vypnout/zapnout vystup
-        if (tlacitko == 6) {
+        if (Inputs_BTN_isBtnPressed(BTN_LEFT_MASK)) {
+            Inputs_BTN_clearBtnBuffer();
             windows_state = SETTINGS_WINDOW;
         } //pusteno tlacitko 3 = nastaveni
-        show_main_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
+        show_main_window(Inputs_BTN_getBtn()); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
         break;
 
     case SETTINGS_WINDOW:
-        if (tlacitko == 4) {
-            windows_state = MAIN_WINDOW;
-        } //pusteno tlacitko 1 = navrat na MAIN
-        if (tlacitko == 5) {
-            windows_state = SETTINGS_WIFI_WINDOW;
-            main_state = MAIN_STATE_WIFISET;
-            //            LEDS_ColorRing();
-        } //pusteno tlacitko 2 = nastaveni wifi
-        if (tlacitko == 6) {
-            windows_state = SETTINGS_BRIGHTNESS_WINDOW;
-        } //pusteno tlacitko 3 = nastaveni jasu
-        show_settings_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
+        //        if (tlacitko == 4) {
+        //            windows_state = MAIN_WINDOW;
+        //        } //pusteno tlacitko 1 = navrat na MAIN
+        //        if (tlacitko == 5) {
+        //            windows_state = SETTINGS_WIFI_WINDOW;
+        //            main_state = MAIN_STATE_WIFISET;
+        //            //            LEDS_ColorRing();
+        //        } //pusteno tlacitko 2 = nastaveni wifi
+        //        if (tlacitko == 6) {
+        //            windows_state = SETTINGS_BRIGHTNESS_WINDOW;
+        //        } //pusteno tlacitko 3 = nastaveni jasu
+        //        show_settings_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
         break;
 
     case SETTINGS_WIFI_WINDOW:
-        if (tlacitko == 4 || main_state_get() == MAIN_STATE_WIFISETOK) {
-            windows_state = SETTINGS_WINDOW;
-            main_state = MAIN_STATE_NORMAL;
-        } //pusteno tlacitko 1 = navrat do SETTINGS
-        //	if(tlacitko==5) {if(vystup){vystup=0;RELAY(0);}else {vystup=1;RELAY(1);}}	//pusteno tlacitko 2 = nastaveni wifi
-        //	if(tlacitko==6) {windows_state=SETTINGS_WINDOW;}							//pusteno tlacitko 3 = nastaveni jasu
-        show_settings_wifi_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
+        //        if (tlacitko == 4 || main_state_get() == MAIN_STATE_WIFISETOK) {
+        //            windows_state = SETTINGS_WINDOW;
+        //            main_state = MAIN_STATE_NORMAL;
+        //        } //pusteno tlacitko 1 = navrat do SETTINGS
+        //        //	if(tlacitko==5) {if(vystup){vystup=0;RELAY(0);}else {vystup=1;RELAY(1);}}	//pusteno tlacitko 2 = nastaveni wifi
+        //        //	if(tlacitko==6) {windows_state=SETTINGS_WINDOW;}							//pusteno tlacitko 3 = nastaveni jasu
+        //        show_settings_wifi_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
         break;
 
     case SETTINGS_BRIGHTNESS_WINDOW:
-        if (tlacitko == 4) {
-            windows_state = SETTINGS_WINDOW;
-        } //pusteno tlacitko 1 = navrat do SETTINGS
-        if (tlacitko == 5) {
-            windows_state = SETTINGS_BRIGHTNESS_DISPLAY_WINDOW;
-        } //pusteno tlacitko 2 = nastaveni jasu displeje
-        if (tlacitko == 6) {
-            windows_state = SETTINGS_BRIGHTNESS_LEDS_WINDOW;
-        } //pusteno tlacitko 3 = nastaveni jasu LED
-        show_settings_brightness_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
+        //        if (tlacitko == 4) {
+        //            windows_state = SETTINGS_WINDOW;
+        //        } //pusteno tlacitko 1 = navrat do SETTINGS
+        //        if (tlacitko == 5) {
+        //            windows_state = SETTINGS_BRIGHTNESS_DISPLAY_WINDOW;
+        //        } //pusteno tlacitko 2 = nastaveni jasu displeje
+        //        if (tlacitko == 6) {
+        //            windows_state = SETTINGS_BRIGHTNESS_LEDS_WINDOW;
+        //        } //pusteno tlacitko 3 = nastaveni jasu LED
+        //        show_settings_brightness_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
         break;
 
     case SETTINGS_BRIGHTNESS_DISPLAY_WINDOW:
-        if (tlacitko == 4) {
-            windows_state = SETTINGS_BRIGHTNESS_WINDOW;
-        } //pusteno tlacitko 1 = navrat do SETTINGS_BRIGHTNESS
-        if (tlacitko == 5) {
-            if (brightness_display > BRIGHTNESS_DISPLAY_MIN + 19)brightness_display -= 20;
-            save_brightness = 1;
-        } //pusteno tlacitko 2 = nastaveni jasu displeje
-        if (tlacitko == 6) {
-            if (brightness_display < BRIGHTNESS_DISPLAY_MAX - 19)brightness_display += 20;
-            save_brightness = 1;
-        } //pusteno tlacitko 3 = nastaveni jasu LED
-        show_settings_brightness_display_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
-        OLED_SetContrast(brightness_display);
+        //        if (tlacitko == 4) {
+        //            windows_state = SETTINGS_BRIGHTNESS_WINDOW;
+        //        } //pusteno tlacitko 1 = navrat do SETTINGS_BRIGHTNESS
+        //        if (tlacitko == 5) {
+        //            if (brightness_display > BRIGHTNESS_DISPLAY_MIN + 19)brightness_display -= 20;
+        //            save_brightness = 1;
+        //        } //pusteno tlacitko 2 = nastaveni jasu displeje
+        //        if (tlacitko == 6) {
+        //            if (brightness_display < BRIGHTNESS_DISPLAY_MAX - 19)brightness_display += 20;
+        //            save_brightness = 1;
+        //        } //pusteno tlacitko 3 = nastaveni jasu LED
+        //        show_settings_brightness_display_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
+        //        OLED_SetContrast(brightness_display);
         break;
 
     case SETTINGS_BRIGHTNESS_LEDS_WINDOW:
-        if (tlacitko == 4) {
-            windows_state = SETTINGS_BRIGHTNESS_WINDOW;
-        } //pusteno tlacitko 1 = navrat do SETTINGS_BRIGHTNESS
-        if (tlacitko == 5) {
-            if (brightness_leds > BRIGHTNESS_LEDS_MIN + 9)brightness_leds -= 10;
-            save_brightness = 1;
-        } //pusteno tlacitko 2 = nastaveni jasu displeje
-        if (tlacitko == 6) {
-            if (brightness_leds < BRIGHTNESS_LEDS_MAX - 9)brightness_leds += 10;
-            save_brightness = 1;
-        } //pusteno tlacitko 3 = nastaveni jasu LED
-        show_settings_brightness_leds_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
-        //        LEDS_SetPWM(brightness_leds);
+        //        if (tlacitko == 4) {
+        //            windows_state = SETTINGS_BRIGHTNESS_WINDOW;
+        //        } //pusteno tlacitko 1 = navrat do SETTINGS_BRIGHTNESS
+        //        if (tlacitko == 5) {
+        //            if (brightness_leds > BRIGHTNESS_LEDS_MIN + 9)brightness_leds -= 10;
+        //            save_brightness = 1;
+        //        } //pusteno tlacitko 2 = nastaveni jasu displeje
+        //        if (tlacitko == 6) {
+        //            if (brightness_leds < BRIGHTNESS_LEDS_MAX - 9)brightness_leds += 10;
+        //            save_brightness = 1;
+        //        } //pusteno tlacitko 3 = nastaveni jasu LED
+        //        show_settings_brightness_leds_window(tlacitko); //zadny stisk nebo drzeni tlacitka 1, 2 nebo 3
+        //        //        LEDS_SetPWM(brightness_leds);
         break;
 
 
@@ -188,54 +193,113 @@ void show_idle_window(void)
 
 void show_main_window(uint32_t tlacitko)
 {
-    static uint32_t obr1 = 0;
-    static uint32_t obr2 = 0;
-    static uint32_t obr3 = 0;
+    //    static uint32_t obr1 = 0;
+    //    static uint32_t obr2 = 0;
+    //    static uint32_t obr3 = 0;
+
+#define MenuCount 6
     uint8_t textbuff[40];
+    uint8_t MenuShift = 0;
+    uint8_t ArrowPos = 0;
+    static uint8_t BtnCount = 0; //osetrit proti zadani vic jak 0-MenuCount
+    if (Inputs_BTN_isBtnPressed(BTN_DOWN_MASK)) {
+        BtnCount++;
+        Inputs_BTN_clearBtnBuffer();
+    }
+    if (Inputs_BTN_isBtnPressed(BTN_UP_MASK)) {
+        if (BtnCount)
+            BtnCount--;
+        Inputs_BTN_clearBtnBuffer();
+    }
+
+    if (BtnCount > MenuCount)
+        BtnCount = MenuCount;
+
+
+    uint8_t MenuPos[MenuCount];
+    if (BtnCount)
+        MenuShift = BtnCount - 1;
+    if (BtnCount >= MenuCount - 1)
+        MenuShift -= 1;
+
+    for (int i = 0; i <= MenuCount; ++i)
+        MenuPos[i] = 100;
+    for (int i = MenuShift; i < MenuShift + 3; ++i) {
+        MenuPos[i] = 12 * (i - MenuShift + 1);
+    }
 
     UG_FillScreen(0);
 
     UG_FontSelect(&FONT_5X12);
-    smart_siprintf(textbuff, "%02d.%02d.%04d", 1, 2, 3 + 2000);
-    UG_PutString(0, 0, textbuff);
+    UG_PutString(10, MenuPos[0], "Nabijeni");
+    UG_PutString(10, MenuPos[1], "Vybijeni");
+    UG_PutString(10, MenuPos[2], "Mereni kapacity");
+    UG_PutString(10, MenuPos[3], "Nastaveni");
+    UG_PutString(10, MenuPos[4], "Nastaveni1");
+    UG_PutString(10, MenuPos[5], "Nastaveni2");
 
-    if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
-    else add_picture_wifi(picture_wifi_off);
-
-    smart_siprintf(textbuff, "%02d:%02d:%02d", 4, 5, 6);
-    UG_PutString(80, 0, textbuff);
-
-    UG_FontSelect(&FONT_10X16);
-    if (vystup)UG_PutString(26, 13, "ZAPNUTO");
-    else UG_PutString(26, 13, "VYPNUTO");
-
-    if (tlacitko == 1) {
-        obr1 = 1;
-        obr2 = 0;
-        obr3 = 0;
+    UG_PutString(85, 0, "Ucc=12V");
+    if (MenuShift) {
+        smart_siprintf(textbuff, "%c", 30); //v
+        UG_PutString(40, 00, textbuff);
     }
-    if (tlacitko == 2) {
-        obr1 = 0;
-        obr2 = 1;
-        obr3 = 0;
+    if (MenuShift + 3 - MenuCount) {
+        smart_siprintf(textbuff, "%c", 31); //^
+        UG_PutString(40, 48, textbuff);
     }
-    if (tlacitko == 3) {
-        obr1 = 0;
-        obr2 = 0;
-        obr3 = 1;
-    }
-    if (tlacitko > 3) {
-        obr1 = 0;
-        obr2 = 0;
-        obr3 = 0;
-    }
+    if (BtnCount)
+        ArrowPos = 1;
+    if (BtnCount == MenuCount - 1)
+        ArrowPos = 2;
+    //    else ArrowPos = 1;
 
-    if (obr1) add_picture(1, picture_measuring_i);
-    else add_picture(1, picture_measuring);
-    if (obr2) add_picture(2, picture_output_i);
-    else add_picture(2, picture_output);
-    if (obr3) add_picture(3, picture_settings_i);
-    else add_picture(3, picture_settings);
+    smart_siprintf(textbuff, "%c", 16); //>
+    UG_PutString(00, 12 * (ArrowPos + 1), textbuff);
+
+
+
+
+    //    UG_FontSelect(&FONT_5X12);
+    //    smart_siprintf(textbuff, "%02d.%02d.%04d", 1, 2, SysTick_getSeconds());
+    //    UG_PutString(0, 0, textbuff);
+
+    //    if (wifi_connect == 1)add_picture_wifi(picture_wifi_on);
+    //    else add_picture_wifi(picture_wifi_off);
+
+    //    smart_siprintf(textbuff, "%02d:%02d:%02d", 44, 45, 64);
+    //    UG_PutString(80, 0, textbuff);
+
+    //    UG_FontSelect(&FONT_10X16);
+    //    if (vystup)UG_PutString(26, 13, "ZAPNUTO");
+    //    else UG_PutString(26, 13, "VYPNUTO");
+
+    //    if (tlacitko == 1) {
+    //        obr1 = 1;
+    //        obr2 = 0;
+    //        obr3 = 0;
+    //    }
+    //    if (tlacitko == 2) {
+    //        obr1 = 0;
+    //        obr2 = 1;
+    //        obr3 = 0;
+    //    }
+    //    if (tlacitko == 3) {
+    //        obr1 = 0;
+    //        obr2 = 0;
+    //        obr3 = 1;
+    //    }
+    //    if (tlacitko > 3) {
+    //        obr1 = 0;
+    //        obr2 = 0;
+    //        obr3 = 0;
+    //    }
+
+    //    if (obr1) add_picture(1, picture_measuring_i);
+    //    else add_picture(1, picture_measuring);
+    //    if (obr2) add_picture(2, picture_output_i);
+    //    else add_picture(2, picture_output);
+    //    if (obr3) add_picture(3, picture_settings_i);
+    //    else add_picture(3, picture_settings);
 }
 
 void show_settings_window(uint32_t tlacitko)

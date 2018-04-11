@@ -16,7 +16,7 @@
 #define COLOR_BLUE COLOR(0, 0, 30)
 #define COLOR_PURPLE COLOR(255, 0, 216)
 #define COLOR_ORANGE COLOR(132, 92, 0)
-#define COLOR_YELLOW COLOR(50, 50, 0)
+#define COLOR_YELLOW COLOR(10, 10, 0)
 
 #define BTN_OK_MASK       0x1
 #define BTN_LEFT_MASK     0x2
