@@ -26,4 +26,6 @@ uint32_t battery_Uget(void);
 
 uint32_t battery_Iget(void);
 
+uint32_t battery_UccGet(void);
+
 #endif /* BATTERY_H */
