@@ -4,6 +4,7 @@
 #include "inputs.h"
 #include "directives.h"
 #include "debug.h"
+#include "internal_timer.h"
 
 uint32_t main_state = MAIN_STATE_INITIALISATION;
 
@@ -93,7 +94,7 @@ void UI_process(void) //User Interface process
 
         case CHARGING_SETUP_WINDOW:
             charging_setup_window();
-            charging_sec_t0 = SysTick_getSeconds();
+            charging_sec_t0 = TIM16_getSeconds();
             break;
         case CHARGING_WINDOW:
             
@@ -122,7 +123,7 @@ void show_charging_window(uint32_t t0){
     uint8_t ArrowPos = 0;
     uint8_t MenuPos[MenuCount];
     static uint8_t BtnCount = 0;
-    uint8_t t = SysTick_getSeconds() - t0;
+    uint8_t t = TIM16_getSeconds() - t0;
 
     if (Inputs_BTN_isBtnPressed(BTN_DOWN_MASK)) {
         BtnCount++;

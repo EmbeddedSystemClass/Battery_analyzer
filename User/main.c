@@ -101,6 +101,7 @@ int main(void)
 
     UI_TIMER_Init();
     main_state_set(MAIN_STATE_NORMAL);
+    TIM16_Init();
     while (1) {
         ;
     }
