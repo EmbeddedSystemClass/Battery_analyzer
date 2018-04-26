@@ -267,6 +267,11 @@ uint16_t Inputs_ADC_getRecalgulatedValue(enum ADC_Channels_e channel)
         value = adc * 11;
         break;
     }
+    case ADC_FB_ADC:
+    {
+        value = adc * 2;
+        break;
+    }
     case ADC_DISCHARGE_CURR:
     case ADC_CHARGE_CURR:
     {

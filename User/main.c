@@ -157,6 +157,7 @@ int main(void)
 
     UI_TIMER_Init();
     main_state_set(MAIN_STATE_NORMAL);
+    TIM16_Init();
     SCPI_Init(&scpi_context,
             scpi_commands,
             &scpi_interface,

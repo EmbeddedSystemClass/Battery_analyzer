@@ -79,6 +79,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/ssd1306.o \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
+	${OBJECTDIR}/_ext/d29c42da/battery.o \
 	${OBJECTDIR}/_ext/d29c42da/main.o \
 	${OBJECTDIR}/_ext/d29c42da/syscalls.o \
 	${OBJECTDIR}/_ext/d29c42da/systick.o
@@ -326,6 +327,11 @@ ${OBJECTDIR}/_ext/d29c42da/UI.o: ../User/UI.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
 	${RM} "$@.d"
 	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/UI.o ../User/UI.c
+
+${OBJECTDIR}/_ext/d29c42da/battery.o: ../User/battery.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/battery.o ../User/battery.c
 
 ${OBJECTDIR}/_ext/d29c42da/main.o: ../User/main.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da

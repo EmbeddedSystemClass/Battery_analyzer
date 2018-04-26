@@ -20,5 +20,8 @@
  
 void TIM3_Init(void);
 void TIM3_Enable(void);
+
+void TIM16_Init(void);
+uint32_t TIM16_getSeconds(void);
  
 #endif /* INTERNAL_TIMER_H */
