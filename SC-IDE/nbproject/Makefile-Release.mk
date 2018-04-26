@@ -68,6 +68,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/ssd1306.o \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
+	${OBJECTDIR}/_ext/d29c42da/battery.o \
 	${OBJECTDIR}/_ext/d29c42da/main.o \
 	${OBJECTDIR}/_ext/d29c42da/systick.o
 
@@ -259,6 +260,11 @@ ${OBJECTDIR}/_ext/d29c42da/UI.o: ../User/UI.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/UI.o ../User/UI.c
+
+${OBJECTDIR}/_ext/d29c42da/battery.o: ../User/battery.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/d29c42da/battery.o ../User/battery.c
 
 ${OBJECTDIR}/_ext/d29c42da/main.o: ../User/main.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/d29c42da
