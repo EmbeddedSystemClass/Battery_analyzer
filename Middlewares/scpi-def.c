@@ -40,12 +40,13 @@
 #include "scpi/scpi.h"
 #include "scpi-def.h"
 #include "iprintf.h"
+#include "debug.h"
+#include "battery.h"
 
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     scpi_number_t param1, param2;
     char bf[15];
-//    smart_iprintf( "meas:volt:dc\r\n"); /* debug command name */
-    smart_iprintf("meas:volt:dc\r\n");
+    SMART_DEBUGF(DEBUG_SCPI,("meas:volt:dc\r\n"));
 
     /* read first parameter if present */
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
@@ -59,13 +60,11 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
-//    smart_iprintf( "\tP1=%s\r\n", bf);
-    smart_iprintf("\tP1=%s\r\n", bf);
+    SMART_DEBUGF(DEBUG_SCPI,("\tP1=%s\r\n", bf));
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-//    smart_iprintf( "\tP2=%s\r\n", bf);
-    smart_iprintf("\tP2=%s\r\n", bf);
+    SMART_DEBUGF(DEBUG_SCPI,("\tP2=%s\r\n", bf));
 
 
     SCPI_ResultDouble(context, 0);
@@ -76,7 +75,7 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context) {
     scpi_number_t param1, param2;
     char bf[15];
-    smart_iprintf( "meas:volt:ac\r\n"); /* debug command name */
+    SMART_DEBUGF(DEBUG_SCPI,( "meas:volt:ac\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
@@ -90,11 +89,11 @@ static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context) {
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
-    smart_iprintf( "\tP1=%s\r\n", bf);
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%s\r\n", bf));
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-    smart_iprintf( "\tP2=%s\r\n", bf);
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP2=%s\r\n", bf));
 
     SCPI_ResultDouble(context, 0);
 
@@ -103,7 +102,7 @@ static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context) {
 
 static scpi_result_t DMM_ConfigureVoltageDc(scpi_t * context) {
     double param1, param2;
-    smart_iprintf( "conf:volt:dc\r\n"); /* debug command name */
+    SMART_DEBUGF(DEBUG_SCPI,( "conf:volt:dc\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamDouble(context, &param1, TRUE)) {
@@ -115,22 +114,52 @@ static scpi_result_t DMM_ConfigureVoltageDc(scpi_t * context) {
         /* do something, if parameter not present */
     }
 
-    smart_iprintf( "\tP1=%lf\r\n", param1);
-    smart_iprintf( "\tP2=%lf\r\n", param2);
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%lf\r\n", param1));
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP2=%lf\r\n", param2));
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t DMM_ConfigureBatteryVoltage(scpi_t * context) {
+    uint32_t param1, param2;
+    SMART_DEBUGF(DEBUG_SCPI,( "conf:batt:volt\r\n")); /* debug command name */
+
+    /* read first parameter if present */
+    if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%ld\r\n", param1));
+    battery_Uset(param1);
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t DMM_ConfigureBatteryCurrent(scpi_t * context) {
+    uint32_t param1, param2;
+    SMART_DEBUGF(DEBUG_SCPI,( "conf:batt:curr\r\n")); /* debug command name */
+
+    /* read first parameter if present */
+    if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%ld\r\n", param1));
+    battery_Iset(param1);
 
     return SCPI_RES_OK;
 }
 
 static scpi_result_t TEST_Bool(scpi_t * context) {
     scpi_bool_t param1;
-    smart_iprintf( "TEST:BOOL\r\n"); /* debug command name */
+    SMART_DEBUGF(DEBUG_SCPI,( "TEST:BOOL\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamBool(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
 
-    smart_iprintf( "\tP1=%d\r\n", param1);
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%d\r\n", param1));
 
     return SCPI_RES_OK;
 }
@@ -152,7 +181,7 @@ static scpi_result_t TEST_ChoiceQ(scpi_t * context) {
     }
 
     SCPI_ChoiceToName(trigger_source, param, &name);
-    smart_iprintf( "\tP1=%s (%ld)\r\n", name, (long int) param);
+    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%s (%ld)\r\n", name, (long int) param));
 
     SCPI_ResultInt32(context, param);
 
@@ -164,7 +193,7 @@ static scpi_result_t TEST_Numbers(scpi_t * context) {
 
     SCPI_CommandNumbers(context, numbers, 2, 1);
 
-    smart_iprintf( "TEST numbers %ld %ld\r\n", numbers[0], numbers[1]);
+    SMART_DEBUGF(DEBUG_SCPI,( "TEST numbers %ld %ld\r\n", numbers[0], numbers[1]));
 
     return SCPI_RES_OK;
 }
@@ -177,7 +206,7 @@ static scpi_result_t TEST_Text(scpi_t * context) {
         buffer[0] = '\0';
     }
 
-    smart_iprintf( "TEXT: ***%s***\r\n", buffer);
+    SMART_DEBUGF(DEBUG_SCPI,( "TEXT: ***%s***\r\n", buffer));
 
     return SCPI_RES_OK;
 }
@@ -333,11 +362,11 @@ static scpi_result_t TEST_Chanlst(scpi_t *context) {
 
     {
         size_t i;
-        smart_iprintf( "TEST_Chanlst: ");
+        SMART_DEBUGF(DEBUG_SCPI,( "TEST_Chanlst: "));
         for (i = 0; i< arr_idx; i++) {
-            smart_iprintf( "%ld!%ld, ", array[i].row, array[i].col);
+            SMART_DEBUGF(DEBUG_SCPI,( "%ld!%ld, ", array[i].row, array[i].col));
         }
-        smart_iprintf( "\r\n");
+        SMART_DEBUGF(DEBUG_SCPI,( "\r\n"));
     }
     return SCPI_RES_OK;
 }
@@ -402,6 +431,8 @@ const scpi_command_t scpi_commands[] = {
 //    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
+    {.pattern = "CONFigure:BATTery:VOLTage", .callback = DMM_ConfigureBatteryVoltage,},
+    {.pattern = "CONFigure:BATTery:CURRent", .callback = DMM_ConfigureBatteryCurrent,},
 
 //    {.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
 

@@ -165,9 +165,8 @@ int main(void)
             SCPI_IDN1, SCPI_IDN2, SCPI_IDN3, SCPI_IDN4,
             scpi_input_buffer, SCPI_INPUT_BUFFER_LENGTH,
             scpi_error_queue_data, SCPI_ERROR_QUEUE_SIZE);
-    SCPI_Input(&scpi_context, "test:text 'aa a'\r\n", strlen("test:text 'aa a'\r\n"));
+    
     state = 1;
-    uint8_t position;
     while (1) {
     }
 
