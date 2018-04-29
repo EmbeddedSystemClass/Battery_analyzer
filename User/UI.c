@@ -5,6 +5,8 @@
 #include "directives.h"
 #include "debug.h"
 #include "internal_timer.h"
+#include "battery.h"
+#include "LEDS.h"
 
 uint32_t main_state = MAIN_STATE_INITIALISATION;
 
@@ -35,20 +37,54 @@ volatile uint32_t wifi_connect;
 #define BRIGHTNESS_DISPLAY_MIN 0
 #define BRIGHTNESS_LEDS_MAX 100
 #define BRIGHTNESS_LEDS_MIN 0
+#define CHARGING_CAPACITY_MULTIPLIER 3/2
 
 static volatile uint8_t brightness_display = 100; //pozdeji bude brat z EEPROM
 static volatile uint8_t brightness_leds = 50;
 
+enum CHARGING_STATES_t {
+    CHARGING_STATE_CC,
+    CHARGING_STATE_CV,
+    CHARGING_STATE_CV_LOW,
+    CHARGING_STATE_CHARGED,
+    //CHARGING_STATE_BATTERY_NOT_CONNECTED,
+    CHARGING_STATE_STOP,
+    CHARGING_STATE_TRICKLE,
+};
 
-static const uint32_t Umin[] = {0 ,900,900,2000,0,0,1000};
-static const uint32_t Unom[] = {0 ,900,900,2000,0,0,1000}; //opravit
-static const uint32_t Umax[] = {0 ,900,900,2000,0,0,1000};//opravit
+enum CHARGING_STATES_t charging_state = CHARGING_STATE_CC;
 
+
+static const uint32_t Umin[] = {0 ,900,900,1900,0,0,1000};
+static const uint32_t Unom[] = {0 ,1200,1200,2000,0,0,1000}; //opravit
+static const uint32_t Umax[] = {0 ,1500,1450,2400,0,0,1000};//opravit
+
+static volatile uint32_t OldSeconds = 0;
+static volatile uint32_t t0_NiMH = 0;
 
 static  acm_process process = NO_PROCESS;
 static  uint8_t acm = NO_ACM;
+static  uint8_t wh_ah = 0; //pridat do nastaveni
+static  uint32_t timer_NiMH = 0;
 
 static uint32_t param_pass[7];
+
+#define NVD_ARRAY_NUM 10
+static int32_t negative_voltage_detection_array[NVD_ARRAY_NUM] = {0,};
+static uint8_t nvd_point = 1;
+
+
+
+void show_charging_window(uint32_t t0);
+void charging_setup_window(void);
+void show_acm_list(acm_list *acm, acm_process process);
+void show_main_window(acm_process *process);
+void show_settings_window(uint32_t tlacitko);
+void show_settings_brightness_window(uint32_t tlacitko);
+void show_settings_brightness_display_window(uint32_t tlacitko);
+void show_settings_brightness_leds_window(uint32_t tlacitko);
+void show_settings_wifi_window(uint32_t tlacitko);
+
 
 void init_param_pass (uint8_t acm)
 {
@@ -61,16 +97,161 @@ void init_param_pass (uint8_t acm)
         param_pass[6] = 100; //kapacita 100mAh
 }
 
+uint8_t negative_voltage_detection(void)  //overit fci, diferencni detekce, upravit:najit maximum a hledat zda jsou vsechny hodnoty mensi nez minule
+{
+    uint8_t nvd_point_start = nvd_point;
+    negative_voltage_detection_array[nvd_point] = (int32_t)battery_Uget();
+    nvd_point++;
+    nvd_point %= NVD_ARRAY_NUM;
+    //uint8_t i = 0;
+    
+    for(;nvd_point++%NVD_ARRAY_NUM != nvd_point_start;++nvd_point)
+    {
+        if (negative_voltage_detection_array[nvd_point_start] > negative_voltage_detection_array[nvd_point]) 
+        {
+            nvd_point = nvd_point_start; //nasla se vetsi nez aktualni
+            return 0;
+        }
+    }
+    return 1;//vsechny hodnoty musi byt mensi nez aktualni               
+}
 
-void show_charging_window(uint32_t t0);
-void charging_setup_window(void);
-void show_acm_list(acm_list *acm, acm_process process);
-void show_main_window(acm_process *process);
-void show_settings_window(uint32_t tlacitko);
-void show_settings_brightness_window(uint32_t tlacitko);
-void show_settings_brightness_display_window(uint32_t tlacitko);
-void show_settings_brightness_leds_window(uint32_t tlacitko);
-void show_settings_wifi_window(uint32_t tlacitko);
+uint32_t measure_cappacity(uint32_t cappacity, uint32_t t){ //mAmVs  
+    if (wh_ah)
+        cappacity +=battery_Iget()*(t-OldSeconds);
+    if (!wh_ah)
+        cappacity +=battery_Iget()*battery_Uget()*(t-OldSeconds);
+    
+    OldSeconds = t;
+    return cappacity;
+}
+
+
+uint64_t charge_NiMH (uint32_t t, uint64_t cappacity) //in progress
+{
+    uint8_t textbuff[40];
+    uint32_t exceed_time =0;
+    if(wh_ah)
+        exceed_time = param_pass[6]/param_pass[5]*3600;
+    if(!wh_ah)
+        exceed_time = param_pass[6]/param_pass[5]*3600000/param_pass[3];
+    
+    if((battery_UccGet()) < param_pass[2]*param_pass[1]){ //napajeci napeti - Umax nab
+        charging_state = CHARGING_STATE_STOP;//udelej chybu nap. napeti je mensi nez maximalni napeti batery pri ;
+        smart_siprintf(textbuff, "!Ucc < Unab!");
+        
+    }
+    if(!param_pass[6]){
+        charging_state = CHARGING_STATE_STOP;//udelej chybu nulova nabijena kapacita
+        smart_siprintf(textbuff, "!Kapacita = 0!");
+    }
+    cappacity = measure_cappacity(cappacity,  t);
+    switch (charging_state){
+        case CHARGING_STATE_CC:
+            if (battery_Uget()/param_pass[1] < 1000 )//1V
+            { 
+                t = 0;
+                if(wh_ah)
+                     battery_Iset(param_pass[6]/10);
+                if(!wh_ah)
+                     battery_Iset(param_pass[6]/param_pass[3]/10);
+            }
+            else
+            {
+                battery_Iset(param_pass[5]);
+                if (t > exceed_time )
+                {
+                    charging_state = CHARGING_STATE_CHARGED;
+                }
+                if (negative_voltage_detection())
+                {
+                    charging_state = CHARGING_STATE_TRICKLE;
+                    t0_NiMH = t;
+                }
+            }
+            break;
+            
+        case CHARGING_STATE_TRICKLE:
+            if(wh_ah)
+                 battery_Iset(param_pass[6]/20);
+            if(!wh_ah)
+                 battery_Iset(param_pass[6]/param_pass[3]/20);
+            if ( (t-t0_NiMH) >= 15*60 )
+                charging_state = CHARGING_STATE_CHARGED;
+            break;
+            
+        case CHARGING_STATE_CHARGED:
+            battery_Iset(0);
+//            LEDS_setColor(COLOR_GREEN);
+            smart_siprintf(textbuff, "!Nabito!");
+            UG_PutString(0,20, textbuff);
+            break;
+            
+        case CHARGING_STATE_STOP:
+            battery_Iset(0);
+//          LEDS_setColor(COLOR_RED);
+            smart_siprintf(textbuff, "!Zastaveno!");
+            UG_PutString(0,20, textbuff);
+            break;       
+            
+        default:
+            charging_state = CHARGING_STATE_CHARGED;
+            break;
+    } 
+}
+uint64_t charge_Pb_Acid (uint32_t t, uint64_t cappacity){
+    uint8_t textbuff[40];
+    if((battery_UccGet()) < param_pass[2]*param_pass[1]){ //napajeci napeti - Umax nab
+        charging_state = CHARGING_STATE_STOP;//udelej chybu nap. napeti je mensi nez maximalni napeti batery pri ;
+        smart_siprintf(textbuff, "!Ucc < Unab!");
+        
+    }
+    if(!param_pass[6]){
+        charging_state = CHARGING_STATE_STOP;//udelej chybu nulova nabijena kapacita
+        smart_siprintf(textbuff, "!Kapacita = 0!");
+    }
+    if (cappacity > param_pass[6]*CHARGING_CAPACITY_MULTIPLIER){
+        charging_state = CHARGING_STATE_STOP;        //prekrocena maximalni povolena nabijeci kapacita
+        smart_siprintf(textbuff, "!Kapacita = 0!");
+    }
+    switch (charging_state){
+        case CHARGING_STATE_CC: 
+            battery_Iset(param_pass[5]);
+            cappacity = measure_cappacity(cappacity,  t);
+            if(battery_Uget() >= param_pass[1] * param_pass[2])
+                charging_state = CHARGING_STATE_CV;
+//          LEDS_setColor(COLOR_RED);
+            break;
+        case CHARGING_STATE_CV: 
+            if(battery_Iget() == 0);
+                //odpojeny acm
+            battery_Uset(param_pass[2]);
+            cappacity = measure_cappacity(cappacity,  t);
+//            LEDS_setColor(COLOR_ORANGE);
+            if(battery_Iget() <= param_pass[6]/20)
+                charging_state = CHARGING_STATE_CV_LOW;
+            
+            break;
+        case CHARGING_STATE_CV_LOW: 
+            battery_Uset(param_pass[1]*2275);
+            cappacity = measure_cappacity(cappacity,t);
+            if(battery_Iget() <= param_pass[6]/34)
+                charging_state = CHARGING_STATE_CHARGED;
+//            LEDS_setColor(COLOR_YELLOW);
+            break;
+        case CHARGING_STATE_CHARGED: 
+            battery_Iset(0);
+//            LEDS_setColor(COLOR_GREEN);
+            break;
+        case CHARGING_STATE_STOP:
+            battery_Iset(0);
+//            LEDS_setColor(COLOR_RED);
+            break;
+            
+    }
+    UG_PutString(0,20, textbuff);
+    return (cappacity);
+}
 
 void main_state_set(uint32_t state) {
     main_state = state;
@@ -124,6 +305,7 @@ void show_charging_window(uint32_t t0){
     uint8_t MenuPos[MenuCount];
     static uint8_t BtnCount = 0;
     uint8_t t = TIM16_getSeconds() - t0;
+    uint64_t cappacity = 0;
 
     if (Inputs_BTN_isBtnPressed(BTN_DOWN_MASK)) {
         BtnCount++;
@@ -132,6 +314,12 @@ void show_charging_window(uint32_t t0){
     if (Inputs_BTN_isBtnPressed(BTN_UP_MASK)) {
         if (BtnCount)
             BtnCount--;
+        Inputs_BTN_clearBtnBuffer();
+    }
+    
+    
+     if (Inputs_BTN_isBtnPressed(BTN_STOP_MASK)) {
+        windows_state = CHARGING_SETUP_WINDOW;
         Inputs_BTN_clearBtnBuffer();
     }
 
@@ -160,21 +348,38 @@ void show_charging_window(uint32_t t0){
     for (int i = MenuShift; i < MenuShift + 3; ++i) {
         MenuPos[i] = 12 * (i - MenuShift + 1);
     }
+    
+    switch (acm) {
+        case '1': smart_siprintf(textbuff, "!!!!!!!!!BLBOST!!!!!");
+            UG_PutString(10, 0, textbuff);
+            cappacity = charge_NiMH (t, cappacity);break;        //NiMh
+        case '2': break;                                    //NiCd
+        case '3': cappacity = charge_Pb_Acid (t, cappacity); break;                                    //Pb_Acid
+        case '4': break;                                    //Li_Ion
+        case '5': break;                                    //Li_Po
+        case '6': break;                                    //Li_FePo4
+        default:  break;                                     //else
+    }
 
     UG_FillScreen(0);
     UG_FontSelect(&FONT_5X12);
     
     smart_siprintf(textbuff, "Cas: %02d:%02d:%02ds",t/3600,(t/60)%60,t%60);
     UG_PutString(10, MenuPos[0], textbuff);
-    smart_siprintf(textbuff, "Inab: %d.%02dA", 1,10);
+    smart_siprintf(textbuff, "Inab: %d.%02dA", battery_Iget()/1000,battery_Iget()%1000);
     UG_PutString(10, MenuPos[1], textbuff);
-    smart_siprintf(textbuff, "Unab: %d.%02dA",2,20);
+    smart_siprintf(textbuff, "Unab: %d.%02dV",battery_Uget()/1000,battery_Uget()%1000);
     UG_PutString(10, MenuPos[2], textbuff);
-    smart_siprintf(textbuff, "Nabita kapacita: %d.%03dAh", 3,30);
+    if (wh_ah)
+        smart_siprintf(textbuff, "Nabita kapacita: %d.%03dAh", cappacity/3600000,cappacity%3600000);
+    if (!wh_ah)
+        smart_siprintf(textbuff, "Nabita kapacita: %d.%03dWh", cappacity/3600000000,cappacity%3600000000);
     UG_PutString(10, MenuPos[3], textbuff);
 
 
-    UG_PutString(85, 0, "Ucc=5V");
+    smart_siprintf(textbuff, "Ucc=%d.%01dV", battery_UccGet()/1000,battery_UccGet()%1000);
+    UG_PutString(80, 0, textbuff);
+    
     if (MenuShift) {
         smart_siprintf(textbuff, "%c", 30); //v
         UG_PutString(40, 00, textbuff);
@@ -252,7 +457,8 @@ void show_acm_list(acm_list *acm, acm_process process) {
     UG_PutString(10, MenuPos[5], "Li-FePO4");
 
 
-    UG_PutString(85, 0, "Ucc=5V");
+    smart_siprintf(textbuff, "Ucc=%d.%01dV", battery_UccGet()/1000,battery_UccGet()%1000);
+    UG_PutString(80, 0, textbuff);
     if (MenuShift) {
         smart_siprintf(textbuff, "%c", 30); //v
         UG_PutString(40, 00, textbuff);
@@ -326,7 +532,8 @@ void show_main_window(acm_process *process) {
     UG_PutString(10, MenuPos[3], "Nastaveni");
 
 
-    UG_PutString(85, 0, "Ucc=5V");
+    smart_siprintf(textbuff, "Ucc=%d.%01dV", battery_UccGet()/1000,battery_UccGet()%1000);
+    UG_PutString(80, 0, textbuff);
     if (MenuShift) {
         smart_siprintf(textbuff, "%c", 30); //v
         UG_PutString(40, 00, textbuff);
@@ -360,11 +567,17 @@ void charging_setup_window(void) {
         if (!SetBit)BtnCount++;
         else {
             switch (BtnCount) {
-                case 0: if (param_pass[1] > 1) --param_pass[1];
+                case 0: 
+                    if (param_pass[1] > 1) 
+                        --param_pass[1];
                     break;
-                case 1: param_pass[2] -= MulSet;
+                case 1: 
+                    if ((param_pass[2]) >= MulSet) 
+                        param_pass[2] -= MulSet;
                     break;
-                case 2: param_pass[5] -= MulSet;
+                case 2: 
+                    if ((param_pass[5]) >= MulSet)
+                    param_pass[5] -= MulSet;
                     break;
                 case 3: param_pass[6] -= MulSet;
                     break;
@@ -378,9 +591,13 @@ void charging_setup_window(void) {
                 BtnCount--;
         } else {
             switch (BtnCount) {
-                case 0: if ((param_pass[1] + 1)*(param_pass[2]) < 14000) ++param_pass[1];
-                    break; //14V
-                case 1: param_pass[2] += MulSet;
+                case 0: 
+                    if ((param_pass[1] + 1)*(param_pass[2]) < battery_UccGet())
+                        ++param_pass[1];
+                    break; //Ucc
+                case 1: 
+                    if ((param_pass[2] ) < (battery_UccGet()))
+                        param_pass[2] += MulSet;
                     break;
                 case 2: param_pass[5] += MulSet;
                     break;
@@ -403,8 +620,11 @@ void charging_setup_window(void) {
     }
     
     if (Inputs_BTN_isBtnPressed(BTN_RIGHT_MASK)) {
-        if (!SetBit)
+        if (!SetBit){
+            param_pass[0] = BtnCount++;
+            BtnCount--;
             windows_state = CHARGING_WINDOW;
+        }
         if (SetBit){
             if (MulSet>10) MulSet /= 10;
         }
@@ -442,7 +662,14 @@ void charging_setup_window(void) {
     UG_PutString(10, MenuPos[1], textbuff);
     smart_siprintf(textbuff, "Inab: %d.%02dA", param_pass[5] / 1000, param_pass[5] % 1000 / 10);
     UG_PutString(10, MenuPos[2], textbuff);
-    smart_siprintf(textbuff, "Kapacita: %d.%03dAh", param_pass[6]/1000),param_pass[6] % 1000;
+    smart_siprintf(textbuff, "Kapacita: %d.%02d", param_pass[6]/1000),param_pass[6]%1000;
+    if (wh_ah)
+        smart_siprintf(textbuff+15, "Ah");
+    if (!wh_ah)
+        smart_siprintf(textbuff+15, "Wh");
+    UG_PutString(10, MenuPos[3], textbuff);
+    
+   
     UG_PutString(10, MenuPos[3], textbuff);
     
     if (SetBit && BtnCount){
@@ -451,7 +678,8 @@ void charging_setup_window(void) {
     }
 
 
-    UG_PutString(85, 0, "Ucc=5V");
+    smart_siprintf(textbuff, "Ucc=%d.%01dV", battery_UccGet()/1000,battery_UccGet()%1000);
+    UG_PutString(80, 0, textbuff);
     if (MenuShift) {
         smart_siprintf(textbuff, "%c", 30); //v
         UG_PutString(40, 00, textbuff);

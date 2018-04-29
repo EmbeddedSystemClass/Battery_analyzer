@@ -10,6 +10,8 @@
 #include "LEDS.h"
 #include "SysTick.h"
 #include "EEPROM.h"
+#include "LEDS.h"
+#include "directives.h"
 
 enum MAIN_STATES_t {
     MAIN_STATE_INITIALISATION,
