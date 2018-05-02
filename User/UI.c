@@ -85,6 +85,32 @@ void show_settings_brightness_display_window(uint32_t tlacitko);
 void show_settings_brightness_leds_window(uint32_t tlacitko);
 void show_settings_wifi_window(uint32_t tlacitko);
 
+enum CHARGING_STATES_t {
+    CHARGING_STATE_CC,
+    CHARGING_STATE_CV,
+    CHARGING_STATE_CV_LOW,
+    CHARGING_STATE_CHARGED,
+    //CHARGING_STATE_BATTERY_NOT_CONNECTED,
+    CHARGING_STATE_STOP,
+    CHARGING_STATE_TRICKLE,
+};
+
+enum CHARGING_STATES_t charging_state = CHARGING_STATE_CC;
+
+
+static const uint32_t Umin[] = {0 ,900,900,1900,0,0,1000};
+static const uint32_t Unom[] = {0 ,1200,1200,2000,0,0,1000}; //opravit
+static const uint32_t Umax[] = {0 ,1500,1450,2400,0,0,1000};//opravit
+
+static volatile uint32_t OldSeconds = 0;
+static volatile uint32_t t0_NiMH = 0;
+
+static  acm_process process = NO_PROCESS;
+static  uint8_t acm = NO_ACM;
+static  uint8_t wh_ah = 0; //pridat do nastaveni
+static  uint32_t timer_NiMH = 0;
+
+static uint32_t param_pass[7];
 
 void init_param_pass (uint8_t acm)
 {
