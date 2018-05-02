@@ -42,6 +42,7 @@
 #include "iprintf.h"
 #include "debug.h"
 #include "battery.h"
+#include "internal_timer.h"
 
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     scpi_number_t param1, param2;
@@ -120,32 +121,62 @@ static scpi_result_t DMM_ConfigureVoltageDc(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
-static scpi_result_t DMM_ConfigureBatteryVoltage(scpi_t * context) {
-    uint32_t param1, param2;
-    SMART_DEBUGF(DEBUG_SCPI,( "conf:batt:volt\r\n")); /* debug command name */
+static scpi_result_t My_ConfigureBatteryParamsLead(scpi_t * context) {
+    SMART_DEBUGF(DEBUG_SCPI,( "lead\r\n")); /* debug command name */
 
     /* read first parameter if present */
-    if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+    if (!SCPI_ParamUInt32(context, &lead.Icharge, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!SCPI_ParamUInt32(context, &lead.Ucharge_cell, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!SCPI_ParamUInt32(context, &lead.Cells, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!SCPI_ParamUInt32(context, &lead.Icutoff, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!SCPI_ParamUInt32(context, &lead.Max_charging_time, TRUE)) {
         return SCPI_RES_ERR;
     }
 
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%ld\r\n", param1));
-    battery_Uset(param1);
+    Battery_setState(CHARGE);
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t DMM_ConfigureBatteryCurrent(scpi_t * context) {
-    uint32_t param1, param2;
-    SMART_DEBUGF(DEBUG_SCPI,( "conf:batt:curr\r\n")); /* debug command name */
+static scpi_result_t My_ConfigureBatteryParamsDischarge(scpi_t * context) {
+    SMART_DEBUGF(DEBUG_SCPI,( "disc\r\n")); /* debug command name */
 
     /* read first parameter if present */
-    if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+    if (!SCPI_ParamUInt32(context, &lead.Udischarge_minimal, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!SCPI_ParamUInt32(context, &lead.Idischarge, TRUE)) {
         return SCPI_RES_ERR;
     }
 
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%ld\r\n", param1));
-    battery_Iset(param1);
+    Battery_setState(DISCHARGE);
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t My_ConfigureBatteryStateStop(scpi_t * context) {
+    SMART_DEBUGF(DEBUG_SCPI,( "stop\r\n")); /* debug command name */
+    
+    Battery_setState(STOP);
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t My_ConfigureBatteryReadoutTimeout(scpi_t * context) {
+    SMART_DEBUGF(DEBUG_SCPI,( "read\r\n")); /* debug command name */
+
+    /* read first parameter if present */
+    if (!SCPI_ParamUInt32(context, &lead.ReadOutTimeout, TRUE)) {
+        return SCPI_RES_ERR;
+    }
 
     return SCPI_RES_OK;
 }
@@ -431,8 +462,11 @@ const scpi_command_t scpi_commands[] = {
 //    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
-    {.pattern = "CONFigure:BATTery:VOLTage", .callback = DMM_ConfigureBatteryVoltage,},
-    {.pattern = "CONFigure:BATTery:CURRent", .callback = DMM_ConfigureBatteryCurrent,},
+    
+    {.pattern = "LEAD", .callback = My_ConfigureBatteryParamsLead,},   
+    {.pattern = "DISC", .callback = My_ConfigureBatteryParamsDischarge,},
+    {.pattern = "STOP", .callback = My_ConfigureBatteryStateStop,},
+    {.pattern = "READ", .callback = My_ConfigureBatteryReadoutTimeout,},
 
 //    {.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
 
