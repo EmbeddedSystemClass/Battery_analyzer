@@ -76,6 +76,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/inputs.o \
 	${OBJECTDIR}/_ext/413f9488/internal_timer.o \
 	${OBJECTDIR}/_ext/413f9488/mySCPI.o \
+	${OBJECTDIR}/_ext/413f9488/power_supply.o \
 	${OBJECTDIR}/_ext/413f9488/ssd1306.o \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
@@ -89,8 +90,8 @@ OBJECTFILES= \
 CFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections
 
 # CC Compiler Flags
-CCFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections -fno-rtti -fno-exceptions -fno-threadsafe-statics
-CXXFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections -fno-rtti -fno-exceptions -fno-threadsafe-statics
+CCFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections
+CXXFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections
 
 # Fortran Compiler Flags
 FFLAGS=FortranCompiler
@@ -312,6 +313,11 @@ ${OBJECTDIR}/_ext/413f9488/mySCPI.o: ../Peripherals/mySCPI.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/mySCPI.o ../Peripherals/mySCPI.c
+
+${OBJECTDIR}/_ext/413f9488/power_supply.o: ../Peripherals/power_supply.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/power_supply.o ../Peripherals/power_supply.c
 
 ${OBJECTDIR}/_ext/413f9488/ssd1306.o: ../Peripherals/ssd1306.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488

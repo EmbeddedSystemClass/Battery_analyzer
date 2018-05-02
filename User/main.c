@@ -38,6 +38,7 @@
 #include "scpi/scpi.h"
 #include "scpi-def.h"
 #include "queue.h"
+#include "power_supply.h"
 
 static void LL_Init(void);
 static void SystemClock_Config(void);
@@ -116,6 +117,9 @@ int main(void)
 {
     LL_Init();
     Uart_LL_init();
+    
+    PowerSupply_Init();
+    
     LEDS_init();
 
     ssd1306_rst_init();

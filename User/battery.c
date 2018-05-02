@@ -26,5 +26,5 @@ uint32_t battery_Iget(void)
 
 uint32_t battery_UccGet(void)
 {
-    return Inputs_ADC_getRecalgulatedValue(ADC_FB_ADC);
+    return Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
 }

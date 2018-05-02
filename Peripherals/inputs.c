@@ -255,7 +255,7 @@ void Inputs_ADC_printValues(void)
  * @param channel from enum ADC_Channels_e
  * @return value
  */
-uint16_t Inputs_ADC_getRecalgulatedValue(enum ADC_Channels_e channel)
+uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel)
 {
     uint32_t value = 0;
     uint32_t ref = __LL_ADC_CALC_VREFANALOG_VOLTAGE(apply_Q(ADC_Val[ADC_VREF]), LL_ADC_RESOLUTION_12B);
@@ -269,7 +269,7 @@ uint16_t Inputs_ADC_getRecalgulatedValue(enum ADC_Channels_e channel)
     }
     case ADC_FB_ADC:
     {
-        value = adc * 2;
+        value = (adc * 4667)/1000;
         break;
     }
     case ADC_DISCHARGE_CURR:
