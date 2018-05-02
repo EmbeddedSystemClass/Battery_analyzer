@@ -35,13 +35,16 @@ typedef struct {
 } BatteryParam_s;
 
 void battery_Uset(uint32_t voltage);
-void battery_Iset(uint32_t current);
+void battery_Icharge_set(uint32_t current);
+void battery_Idischarge_set(uint32_t current);
 uint32_t battery_Uget(void);
 uint32_t battery_Icharge_get(void);
 uint32_t battery_Idischarge_get(void);
 uint32_t battery_UccGet(void);
 void Battery_setState(Battery_controll_state_e newstate);
 Battery_controll_state_e Battery_getState(void);
+uint32_t battery_Cappacity(uint32_t cappacity, uint32_t t);
+uint64_t charge_Pb_Acid (uint32_t t, uint64_t cappacity);
 
 extern Battery_s lead;
 
