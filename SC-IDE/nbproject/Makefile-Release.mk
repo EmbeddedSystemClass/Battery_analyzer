@@ -66,6 +66,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/df150946/parser.o \
 	${OBJECTDIR}/_ext/df150946/units.o \
 	${OBJECTDIR}/_ext/df150946/utils.o \
+	${OBJECTDIR}/_ext/58d20332/pid_controller.o \
 	${OBJECTDIR}/_ext/58d20332/queue.o \
 	${OBJECTDIR}/_ext/58d20332/scpi-def.o \
 	${OBJECTDIR}/_ext/58d20332/timer.o \
@@ -263,6 +264,11 @@ ${OBJECTDIR}/_ext/df150946/utils.o: ../Middlewares/libscpi/src/utils.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/utils.o ../Middlewares/libscpi/src/utils.c
+
+${OBJECTDIR}/_ext/58d20332/pid_controller.o: ../Middlewares/pid_controller.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/pid_controller.o ../Middlewares/pid_controller.c
 
 ${OBJECTDIR}/_ext/58d20332/queue.o: ../Middlewares/queue.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332

@@ -66,6 +66,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/df150946/parser.o \
 	${OBJECTDIR}/_ext/df150946/units.o \
 	${OBJECTDIR}/_ext/df150946/utils.o \
+	${OBJECTDIR}/_ext/58d20332/pid_controller.o \
 	${OBJECTDIR}/_ext/58d20332/queue.o \
 	${OBJECTDIR}/_ext/58d20332/scpi-def.o \
 	${OBJECTDIR}/_ext/58d20332/timer.o \
@@ -263,6 +264,11 @@ ${OBJECTDIR}/_ext/df150946/utils.o: ../Middlewares/libscpi/src/utils.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/df150946
 	${RM} "$@.d"
 	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/utils.o ../Middlewares/libscpi/src/utils.c
+
+${OBJECTDIR}/_ext/58d20332/pid_controller.o: ../Middlewares/pid_controller.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
+	${RM} "$@.d"
+	$(COMPILE.c) -Wall -s -DSTM32F030C8T6 -DSTM32F030x8 -DUSE_FULL_LL_DRIVER -I../Drivers -I../Drivers/CMSIS -I../Drivers/CMSIS/Include -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/STM32F0xx_HAL_Driver/Src -I../Middlewares -I../Peripherals -I../Interfaces -I../User -I../Middlewares/libscpi/inc -I../Middlewares/libscpi/src -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/pid_controller.o ../Middlewares/pid_controller.c
 
 ${OBJECTDIR}/_ext/58d20332/queue.o: ../Middlewares/queue.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332

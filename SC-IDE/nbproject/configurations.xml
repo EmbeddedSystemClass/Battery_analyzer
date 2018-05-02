@@ -69,6 +69,7 @@
         <itemPath>../Middlewares/debug.h</itemPath>
         <itemPath>../Middlewares/delay_us.h</itemPath>
         <itemPath>../Middlewares/iprintf.h</itemPath>
+        <itemPath>../Middlewares/pid_controller.h</itemPath>
         <itemPath>../Middlewares/queue.h</itemPath>
         <itemPath>../Middlewares/scpi-def.h</itemPath>
         <itemPath>../Middlewares/timer.h</itemPath>
@@ -148,6 +149,7 @@
         </logicalFolder>
         <itemPath>../Middlewares/delay_us.c</itemPath>
         <itemPath>../Middlewares/iprintf.c</itemPath>
+        <itemPath>../Middlewares/pid_controller.c</itemPath>
         <itemPath>../Middlewares/queue.c</itemPath>
         <itemPath>../Middlewares/scpi-def.c</itemPath>
         <itemPath>../Middlewares/timer.c</itemPath>
@@ -603,6 +605,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../Middlewares/pid_controller.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/pid_controller.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Middlewares/queue.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -1093,6 +1099,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../Middlewares/pid_controller.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../Middlewares/pid_controller.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../Middlewares/queue.c" ex="false" tool="0" flavor2="0">
       </item>

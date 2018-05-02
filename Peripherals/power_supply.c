@@ -7,13 +7,20 @@
 #include "stm32f0xx_ll_tim.h"
 #include "debug.h"
 #include "inputs.h"
+#include "pid_controller.h"
 
 static void TIM1_GPIO_Init(void);
 void TIM1_Init(void);
 void TIM6_Init(void);
+void StepdownProcess (void);
+
+PIDControl PID_stepdown;
 
 void PowerSupply_Init(void)
 {
+    //PIDInit(&PID_stepdown, 1.5, 1.1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT);  
+    PIDInit(&PID_stepdown, 1.1, 1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT);  
+    PIDSetpointSet(&PID_stepdown,580);
     TIM1_GPIO_Init();
     TIM1_Init();
     TIM6_Init();  
@@ -99,7 +106,7 @@ void TIM6_Init(void)
 
   TIM_InitStruct.Prescaler = 48;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 10000;
+  TIM_InitStruct.Autoreload = 1000;
   LL_TIM_Init(TIM6, &TIM_InitStruct);
 
   LL_TIM_EnableARRPreload(TIM6);
@@ -163,15 +170,41 @@ void TIM6_IRQHandler(void)
     if(LL_TIM_IsActiveFlag_UPDATE(TIM6))
     {
         LL_TIM_ClearFlag_UPDATE(TIM6);
-      
+        StepdownProcess();
         
-        uint16_t value=Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
-        if(value<NAPETI) i++;
-        else if (value>NAPETI) i--;
+    }
+}
+
+#define CONSTANT_VOLTAGE 0
+#define CONSTANT_CURRENT 1
+
+uint32_t mode=CONSTANT_CURRENT;
+
+void StepdownProcess (void)
+{
+    uint16_t value=0;
+    if(mode==CONSTANT_VOLTAGE)
+    {
+        value=Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+    }
+    else if(mode==CONSTANT_CURRENT)
+    {
+        value=Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
+        if(Inputs_ADC_getRecalculatedValue(ADC_FB_ADC)<4500) value=0;
+    }
+        
+        PIDInputSet(&PID_stepdown,value);
+        PIDCompute(&PID_stepdown);
+        uint16_t n=PIDOutputGet(&PID_stepdown);
+      //  uint16_t value=Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        
+        
+        //if(value<NAPETI) i++;
+        //else if (value>NAPETI) i--;
         //if(i<1000)i++;
         //else i=0;
-
-        SMART_DEBUGF(DEBUG_POWER, ("U: %d \r\n",value ));
-        LL_TIM_OC_SetCompareCH1(TIM1, i);
-    }
+//Inputs_ADC_printValues();
+        //SMART_DEBUGF(DEBUG_POWER, ("U: %d,%d,%d \r\n",Inputs_ADC_getRecalculatedValue(ADC_FB_ADC),n,Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR) ));
+       // Inputs_ADC_printChannel(ADC_CHARGE_CURR);
+        LL_TIM_OC_SetCompareCH1(TIM1, n);
 }
