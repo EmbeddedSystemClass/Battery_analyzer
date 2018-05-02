@@ -118,9 +118,9 @@ uint8_t negative_voltage_detection(void)  //overit fci, diferencni detekce, upra
 
 uint32_t measure_cappacity(uint32_t cappacity, uint32_t t){ //mAmVs  
     if (wh_ah)
-        cappacity +=battery_Iget()*(t-OldSeconds);
+        cappacity +=battery_Icharge_get()*(t-OldSeconds);
     if (!wh_ah)
-        cappacity +=battery_Iget()*battery_Uget()*(t-OldSeconds);
+        cappacity +=battery_Icharge_get()*battery_Uget()*(t-OldSeconds);
     
     OldSeconds = t;
     return cappacity;
@@ -223,19 +223,19 @@ uint64_t charge_Pb_Acid (uint32_t t, uint64_t cappacity){
 //          LEDS_setColor(COLOR_RED);
             break;
         case CHARGING_STATE_CV: 
-            if(battery_Iget() == 0);
+            if(battery_Icharge_get() == 0);
                 //odpojeny acm
             battery_Uset(param_pass[2]);
             cappacity = measure_cappacity(cappacity,  t);
 //            LEDS_setColor(COLOR_ORANGE);
-            if(battery_Iget() <= param_pass[6]/20)
+            if(battery_Icharge_get() <= param_pass[6]/20)
                 charging_state = CHARGING_STATE_CV_LOW;
             
             break;
         case CHARGING_STATE_CV_LOW: 
             battery_Uset(param_pass[1]*2275);
             cappacity = measure_cappacity(cappacity,t);
-            if(battery_Iget() <= param_pass[6]/34)
+            if(battery_Icharge_get() <= param_pass[6]/34)
                 charging_state = CHARGING_STATE_CHARGED;
 //            LEDS_setColor(COLOR_YELLOW);
             break;
@@ -366,7 +366,7 @@ void show_charging_window(uint32_t t0){
     
     smart_siprintf(textbuff, "Cas: %02d:%02d:%02ds",t/3600,(t/60)%60,t%60);
     UG_PutString(10, MenuPos[0], textbuff);
-    smart_siprintf(textbuff, "Inab: %d.%02dA", battery_Iget()/1000,battery_Iget()%1000);
+    smart_siprintf(textbuff, "Inab: %d.%02dA", battery_Icharge_get()/1000,battery_Icharge_get()%1000);
     UG_PutString(10, MenuPos[1], textbuff);
     smart_siprintf(textbuff, "Unab: %d.%02dV",battery_Uget()/1000,battery_Uget()%1000);
     UG_PutString(10, MenuPos[2], textbuff);

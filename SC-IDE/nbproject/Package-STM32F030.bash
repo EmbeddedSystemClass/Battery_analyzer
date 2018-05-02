@@ -6,7 +6,7 @@
 
 # Macros
 TOP=`pwd`
-CND_PLATFORM=GnuArmEmbedded-Generic
+CND_PLATFORM=GnuArmEmbedded_1-Generic
 CND_CONF=STM32F030
 CND_DISTDIR=dist
 CND_BUILDDIR=build
