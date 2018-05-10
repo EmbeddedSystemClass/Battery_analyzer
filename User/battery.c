@@ -40,7 +40,7 @@ void battery_Idischarge_set(uint32_t current)
 
 uint32_t battery_Uget(void)
 {
-    return Inputs_ADC_getRecalgulatedValue(ADC_V_BATT);
+    return Inputs_ADC_getRecalgulatedValue(ADC_FB_ADC);
 }
 
 uint32_t battery_Icharge_get(void)
@@ -100,4 +100,13 @@ uint64_t charge_Pb_Acid (uint32_t t, uint64_t cappacity)
             
     }
     return (cappacity);
+}
+
+uint64_t battery_discharge(uint32_t t, uint64_t cappacity)
+{
+    if(Battery_getState() != DISCHARGE)
+        Battery_setState(STOP);
+    if (battery_Uget() > lead.Udischarge_minimal * lead.Cells)
+    battery_Idischarge_set(lead.Idischarge);
+    battery_Cappacity(cappacity,t);
 }

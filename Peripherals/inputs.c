@@ -274,7 +274,7 @@ uint16_t Inputs_ADC_getRecalgulatedValue(ADC_Channels_e channel)
     }
     case ADC_FB_ADC:
     {
-        value = adc * 2;
+        value = (adc * 4667)/1000;
         break;
     }
     case ADC_DISCHARGE_CURR:
