@@ -43,7 +43,7 @@ uint32_t battery_Idischarge_get(void);
 uint32_t battery_UccGet(void);
 void Battery_setState(Battery_controll_state_e newstate);
 Battery_controll_state_e Battery_getState(void);
-uint32_t battery_Cappacity(uint32_t cappacity, uint32_t t);
+uint32_t battery_Capacity(uint32_t cappacity, uint32_t t);
 uint64_t charge_Pb_Acid (uint32_t t, uint64_t cappacity);
 
 extern Battery_s lead;
