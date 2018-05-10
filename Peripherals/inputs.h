@@ -21,8 +21,8 @@ typedef enum {
     ADC_V_BATT = 0,
     ADC_V_BUS,
     ADC_VCC_IN,
-    ADC_DISCHARGE_CURR,
     ADC_CHARGE_CURR,
+    ADC_DISCHARGE_CURR,
     ADC_BATT_THERMISTOR,
     ADC_INTERNAL_THERMISTOR,
     ADC_FB_ADC,
@@ -30,14 +30,16 @@ typedef enum {
     ADC_VREF,
     ADC_CHANNELS
 } ADC_Channels_e;
- 
+
 void Inputs_ADC_Init(void);
 
 void ADC_Value(void);
 
 void Inputs_ADC_printValues(void);
 
-uint16_t Inputs_ADC_getRecalgulatedValue(ADC_Channels_e channel);
+void Inputs_ADC_printChannel(ADC_Channels_e channel);
+
+uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel);
 
 void Inputs_BTN_Init(void);
 

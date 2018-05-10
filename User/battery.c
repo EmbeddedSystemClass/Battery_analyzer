@@ -42,22 +42,22 @@ void battery_Idischarge_set(uint32_t current)
 
 uint32_t battery_Uget(void)
 {
-    return Inputs_ADC_getRecalgulatedValue(ADC_FB_ADC);
+    return Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
 }
 
 uint32_t battery_Icharge_get(void)
 {
-    return Inputs_ADC_getRecalgulatedValue(ADC_CHARGE_CURR);
+    return Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
 }
 
 uint32_t battery_Idischarge_get(void)
 {
-    return Inputs_ADC_getRecalgulatedValue(ADC_DISCHARGE_CURR);
+    return Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
 }
 
 uint32_t battery_UccGet(void)
 {
-    return Inputs_ADC_getRecalgulatedValue(ADC_FB_ADC);
+    return Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
 }
 
 uint32_t battery_Capacity(uint32_t capacity, uint32_t t)//mAmVs  

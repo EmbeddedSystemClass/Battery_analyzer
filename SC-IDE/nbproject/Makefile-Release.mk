@@ -66,6 +66,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/df150946/parser.o \
 	${OBJECTDIR}/_ext/df150946/units.o \
 	${OBJECTDIR}/_ext/df150946/utils.o \
+	${OBJECTDIR}/_ext/58d20332/pid_controller.o \
 	${OBJECTDIR}/_ext/58d20332/queue.o \
 	${OBJECTDIR}/_ext/58d20332/scpi-def.o \
 	${OBJECTDIR}/_ext/58d20332/timer.o \
@@ -76,6 +77,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/413f9488/inputs.o \
 	${OBJECTDIR}/_ext/413f9488/internal_timer.o \
 	${OBJECTDIR}/_ext/413f9488/mySCPI.o \
+	${OBJECTDIR}/_ext/413f9488/power_supply.o \
 	${OBJECTDIR}/_ext/413f9488/ssd1306.o \
 	${OBJECTDIR}/_ext/413f9488/uart.o \
 	${OBJECTDIR}/_ext/d29c42da/UI.o \
@@ -263,6 +265,11 @@ ${OBJECTDIR}/_ext/df150946/utils.o: ../Middlewares/libscpi/src/utils.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/df150946/utils.o ../Middlewares/libscpi/src/utils.c
 
+${OBJECTDIR}/_ext/58d20332/pid_controller.o: ../Middlewares/pid_controller.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/58d20332/pid_controller.o ../Middlewares/pid_controller.c
+
 ${OBJECTDIR}/_ext/58d20332/queue.o: ../Middlewares/queue.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/58d20332
 	${RM} "$@.d"
@@ -312,6 +319,11 @@ ${OBJECTDIR}/_ext/413f9488/mySCPI.o: ../Peripherals/mySCPI.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/mySCPI.o ../Peripherals/mySCPI.c
+
+${OBJECTDIR}/_ext/413f9488/power_supply.o: ../Peripherals/power_supply.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/413f9488/power_supply.o ../Peripherals/power_supply.c
 
 ${OBJECTDIR}/_ext/413f9488/ssd1306.o: ../Peripherals/ssd1306.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/413f9488

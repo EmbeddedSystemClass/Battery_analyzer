@@ -248,14 +248,19 @@ void Inputs_ADC_printValues(void)
 
 }
 
-#define LTC6101_V_SENSE_CALCULATE(adc)  ((adc*100)/4990)
+void Inputs_ADC_printChannel(ADC_Channels_e channel)
+{
+    SMART_DEBUGF(DEBUG_ADC, ("ADC ch%d val %ld,\r\n", channel, apply_Q(ADC_Val[channel])));
+}
+
+#define LTC6101_V_SENSE_CALCULATE(adc)  ((adc*330)/6800)
 
 /**
  * @brief get ADC recalculate values
  * @param channel from enum ADC_Channels_e
  * @return value
  */
-uint16_t Inputs_ADC_getRecalgulatedValue(ADC_Channels_e channel)
+uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel)
 {
     uint32_t value = 0;
     uint32_t ref = __LL_ADC_CALC_VREFANALOG_VOLTAGE(apply_Q(ADC_Val[ADC_VREF]), LL_ADC_RESOLUTION_12B);
@@ -274,13 +279,17 @@ uint16_t Inputs_ADC_getRecalgulatedValue(ADC_Channels_e channel)
     }
     case ADC_FB_ADC:
     {
-        value = (adc * 4667)/1000;
+        value = (adc * 4667) / 1000;
         break;
     }
     case ADC_DISCHARGE_CURR:
+    {
+        value = (LTC6101_V_SENSE_CALCULATE(adc)*1000) / 30;
+        break;
+    }
     case ADC_CHARGE_CURR:
     {
-        value = (LTC6101_V_SENSE_CALCULATE(adc)*100) / 30;
+        value = (LTC6101_V_SENSE_CALCULATE(adc)*1000) / 30;
         break;
     }
     case ADC_INTERNAL_THERMISTOR:
