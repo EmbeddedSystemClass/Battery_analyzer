@@ -22,4 +22,5 @@ extern struct Queue_s Rx;
 
 void mySCPI_processInput(void);
 void mySCPI_setEOL_detected(void);
+uint8_t mySCPI_isEOL_detected(void);
 #endif /* MYSCPI_H */

@@ -20,8 +20,8 @@ void SysTick_Handler(void)
     if (delay_time)
         delay_time--;
     if (!(CLK1MS % 1000)) {
-        if (state)
-            mySCPI_processInput();
+//        if (state)
+//            mySCPI_processInput();
         CLK1S++;
 #ifdef DBG_PRINT_ADC_EVERY_SECOND
         Inputs_ADC_printValues();

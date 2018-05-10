@@ -38,6 +38,7 @@
 #include "scpi/scpi.h"
 #include "scpi-def.h"
 #include "queue.h"
+#include "mySCPI.h"
 
 static void LL_Init(void);
 static void SystemClock_Config(void);
@@ -168,6 +169,8 @@ int main(void)
     
     state = 1;
     while (1) {
+        if(mySCPI_isEOL_detected())
+            mySCPI_processInput();
     }
 
 }

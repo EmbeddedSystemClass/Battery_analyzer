@@ -17,9 +17,15 @@ void mySCPI_setEOL_detected(void)
     EOL_detected = 1;
 }
 
+uint8_t mySCPI_isEOL_detected(void)
+{
+    return EOL_detected;
+}
+
 void mySCPI_processInput(void)
 {
     scpi_bool_t result;
     result = SCPI_Input(&scpi_context, RxBuffer, RxCount);
     uart_clearRxBuffer();
+    EOL_detected = 0;
 }
