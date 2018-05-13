@@ -55,4 +55,5 @@ void Battery_setType(Battery_types_e newtype);
 Battery_types_e Battery_getType(void);
 extern Battery_s lead;
 void battery_process(void);
+long map(long x, long in_min, long in_max, long out_min, long out_max);
 #endif /* BATTERY_H */

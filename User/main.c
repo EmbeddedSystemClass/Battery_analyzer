@@ -45,6 +45,8 @@ static void LL_Init(void);
 static void SystemClock_Config(void);
 void WDG_restart(void);
 
+volatile uint32_t remote_control=0;
+
 /**
  * @brief Instance for Independent Watchdog
  */
@@ -174,7 +176,11 @@ int main(void)
     state = 1;
     while (1) {
         if(mySCPI_isEOL_detected())
+        {
+            remote_control=1;
             mySCPI_processInput();
+        }
+            
     }
 
 }

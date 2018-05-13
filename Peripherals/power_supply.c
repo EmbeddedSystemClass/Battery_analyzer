@@ -212,6 +212,9 @@ static void PowerProcess(void)
     uint16_t voltage = 0;
     uint16_t current = 0;
 
+    if(Inputs_ADC_getRecalculatedValue(ADC_INTERNAL_THERMISTOR)<2750)LL_GPIO_SetOutputPin(FAN_GPIO_Port, FAN_Pin);
+    else if(Inputs_ADC_getRecalculatedValue(ADC_INTERNAL_THERMISTOR)>2800)LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+    
     switch (power_supply.mode) {
     case DISCHARGE:
     {
@@ -285,7 +288,7 @@ void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current)
         //prepnuti z jineho stavu
         if (power_supply.mode != DISCHARGE) {
             power_supply.mode = DISCHARGE;
-            PIDInit(&PID_power_supply, 1.1,1, 0, 0.001, 300, 1000, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
+            PIDInit(&PID_power_supply, 1.1,1, 0, 0.001, 300, 800, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
         }
 
         power_supply.min_current = current;
@@ -296,7 +299,7 @@ void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current)
         power_supply.current_voltage = 0;
         PIDSetpointSet(&PID_power_supply, current);
 
-        LL_GPIO_SetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        //LL_GPIO_SetOutputPin(FAN_GPIO_Port, FAN_Pin);
         break;
     }
     case CHARGE_CONSTANT_VOLTAGE:
@@ -315,7 +318,7 @@ void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current)
         power_supply.current_voltage = voltage;
         PIDSetpointSet(&PID_power_supply, voltage);
 
-        LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        //LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
         break;
     }
     case CHARGE_CONSTANT_CURRENT:
@@ -334,7 +337,7 @@ void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current)
         power_supply.current_voltage = 0;
         PIDSetpointSet(&PID_power_supply, current);
 
-        LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        //LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
         break;
     }
     case STOP:
@@ -353,7 +356,7 @@ void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current)
         power_supply.current_voltage = 0;
         PIDSetpointSet(&PID_power_supply, 0);
         
-        LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        //LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
         break;
     }
     default:

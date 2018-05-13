@@ -16,6 +16,12 @@ typedef enum {
 } CHARGING_STATES_t;
 
 static CHARGING_STATES_t charging_state = CHARGING_STATE_CC;
+volatile uint64_t capacity = 0;
+
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 void Battery_setState(Battery_controll_state_e newstate)
 {
@@ -128,7 +134,7 @@ uint64_t battery_discharge(uint32_t t, uint64_t cappacity)
 void battery_process(void)
 {
     uint32_t voltage, current;
-    static uint64_t capacity = 12345;
+
     static uint32_t constant_voltage_mode = 0;
     voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
     static struct timer tim;
@@ -138,9 +144,10 @@ void battery_process(void)
     {
         LEDS_setColor((uint8_t[]) COLOR_BLUE);
         current = Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
+        capacity += current;
         PowerSupply_Set(DISCHARGE, lead.Udischarge_minimal * lead.Cells, lead.Idischarge);
-        smart_iprintf("%ld,%ld,%ld,DISCHARGE\r\n", voltage, current, (uint32_t) capacity);
-        if (voltage <= lead.Udischarge_minimal) {
+        smart_iprintf("%ld,%ld,%ld,DISCHARGE\r\n", voltage, current, (uint32_t) ((capacity / 3600)*100)+map(capacity%3600,0,3600,0,100));
+        if (voltage <= lead.Udischarge_minimal * lead.Cells) {
             Battery_setState(BATTERY_STOP);
             LEDS_setColor((uint8_t[]) COLOR_RED);
         }
@@ -149,18 +156,19 @@ void battery_process(void)
     case BATTERY_CHARGE:
     {
         current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
+        capacity += current;
         if (voltage > lead.Ucutoff * lead.Cells) {
             constant_voltage_mode = 1;
         }
         if (!constant_voltage_mode) {
             LEDS_setColor((uint8_t[]) COLOR_PURPLE);
             PowerSupply_Set(CHARGE_CONSTANT_CURRENT, lead.Ucutoff * lead.Cells, lead.Icharge);
-            smart_iprintf("%ld,%ld,%ld,CHARGE_CC\r\n", voltage, current, (uint32_t) capacity);
+            smart_iprintf("%ld,%ld,%ld,CHARGE_CC\r\n", voltage, current, (uint32_t) ((capacity / 3600)*100)+map(capacity%3600,0,3600,0,100));
             timer_set(&tim, 2500);
         } else {
             LEDS_setColor((uint8_t[]) COLOR_YELLOW);
             PowerSupply_Set(CHARGE_CONSTANT_VOLTAGE, lead.Ucharge_cell * lead.Cells, lead.Icharge);
-            smart_iprintf("%ld,%ld,%ld,CHARGE_CV\r\n", voltage, current, (uint32_t) capacity);
+            smart_iprintf("%ld,%ld,%ld,CHARGE_CV\r\n", voltage, current, (uint32_t) ((capacity / 3600)*100)+map(capacity%3600,0,3600,0,100));
             if (timer_expired(&tim)) {
                 if (current < (lead.Icharge / 10)) {
                     Battery_setState(BATTERY_STOP);
@@ -177,6 +185,7 @@ void battery_process(void)
         PowerSupply_Set(STOP, 0, 0);
         voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
         current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
+        capacity = 0;
         constant_voltage_mode = 0;
         smart_iprintf("%ld,%ld,%ld,STOP\r\n", voltage, current, (uint32_t) capacity);
         break;

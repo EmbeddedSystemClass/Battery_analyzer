@@ -24,6 +24,8 @@ void LEDS_setColor(uint8_t *color)
 
 void LEDS_show(void)
 {
-    
-    ws2812b_sendArray(ledArray, 4);
+    CpuCriticalVar();
+    CpuEnterCritical();
+    ws2812b_sendArray(ledArray, 1);
+    CpuExitCritical();
 }

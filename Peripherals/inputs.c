@@ -11,6 +11,8 @@
 #include "internal_timer.h"
 #include "stm32f0xx_ll_dma.h"
 #include "debug.h"
+#include "battery.h"
+#include "LEDS.h"
 
 static uint8_t pressed_btn;
 #define apply_Q(x)  ((x) >> 11)
@@ -89,8 +91,11 @@ void Inputs_BTN_Init(void)
     LL_EXTI_Init(&EXTI_InitStruct);
 
     NVIC_EnableIRQ(EXTI0_1_IRQn);
+    NVIC_SetPriority(EXTI0_1_IRQn, 2);
     NVIC_EnableIRQ(EXTI2_3_IRQn);
+    NVIC_SetPriority(EXTI2_3_IRQn, 2);
     NVIC_EnableIRQ(EXTI4_15_IRQn);
+    NVIC_SetPriority(EXTI4_15_IRQn, 2);
 }
 
 void Inputs_ADC_Init(void)
@@ -397,6 +402,9 @@ void EXTI4_15_IRQHandler(void)
     if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_14)) {
         LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_14);
         setPressedBtn(BTN_STOP_MASK);
+        Battery_setState(BATTERY_STOP);
+        battery_process();
+        LEDS_setColor((uint8_t[]) COLOR_RED);
         SMART_DEBUGF(DEBUG_BTN, ("Btn STOP pressed\r\n"));
     }
 }
