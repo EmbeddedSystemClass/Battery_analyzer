@@ -21,7 +21,7 @@ FC=gfortran
 AS=arm-none-eabi-gcc
 
 # Macros
-CND_PLATFORM=GnuArmEmbedded_1-Generic
+CND_PLATFORM=GnuArmEmbedded-Generic
 CND_DLIB_EXT=so
 CND_CONF=STM32F030
 CND_DISTDIR=dist
@@ -91,8 +91,8 @@ OBJECTFILES= \
 CFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections -Os -g3 -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function -Wimplicit -Werror=implicit-function-declaration -fno-common
 
 # CC Compiler Flags
-CCFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections -fno-rtti -fno-exceptions -fno-threadsafe-statics
-CXXFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections -fno-rtti -fno-exceptions -fno-threadsafe-statics
+CCFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections
+CXXFLAGS=-mthumb -mcpu=cortex-m0 --specs=nano.specs -fdata-sections -ffunction-sections
 
 # Fortran Compiler Flags
 FFLAGS=FortranCompiler

@@ -41,6 +41,8 @@ void Inputs_ADC_printChannel(ADC_Channels_e channel);
 
 uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel);
 
+uint16_t Inputs_ADC_getRecalculatedLastValue(ADC_Channels_e channel);
+
 void Inputs_BTN_Init(void);
 
 uint8_t Inputs_BTN_getBtn(void);

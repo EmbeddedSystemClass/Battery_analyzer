@@ -250,17 +250,17 @@ void show_remote_access (void)
     UG_FontSelect(&FONT_5X12);
     
     if (Inputs_BTN_isBtnPressed(BTN_STOP_MASK)) {
-        Battery_setState(STOP);
+        Battery_setState(BATTERY_STOP);
         Inputs_BTN_clearBtnBuffer();
     }
     temp_U = battery_Uget();
     switch (Battery_getState())
     {
-        case STOP: 
+        case BATTERY_STOP: 
             UG_FillScreen(0);
             UG_PutString(20, 30, "Nabijeni zastaveno!!!"); 
             break;
-        case CHARGE: 
+        case BATTERY_CHARGE: 
             temp_I = battery_Icharge_get();
              UG_PutString(10, 0, "Vzdalene rizeni"); 
              smart_siprintf(textbuff, "Napeti: %d.%02dV",12,36);//temp_U/1000,temp_U%1000/10);
@@ -270,7 +270,7 @@ void show_remote_access (void)
 //             smart_siprintf(textbuff, "Nabijeta C: %d.%02dAh",10,200);
 //             UG_PutString(10, 36, textbuff);
             break;
-        case DISCHARGE: 
+        case BATTERY_DISCHARGE: 
              temp_I = battery_Idischarge_get();
              UG_PutString(10, 0, "Vzdalene rizeni"); 
              smart_siprintf(textbuff, "Napeti: %d.%02dV",temp_U/1000,temp_U%1000);

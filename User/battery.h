@@ -14,9 +14,9 @@
 #include "stm32f0xx.h"
 
 typedef enum {
-    CHARGE,
-    DISCHARGE,
-    STOP,
+    BATTERY_CHARGE,
+    BATTERY_DISCHARGE,
+    BATTERY_STOP,
 } Battery_controll_state_e;
 
 typedef struct {

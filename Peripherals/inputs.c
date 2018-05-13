@@ -16,6 +16,7 @@ static uint8_t pressed_btn;
 #define apply_Q(x)  ((x) >> 11)
 uint16_t ADC_ConvertedValue[ADC_CHANNELS];
 uint32_t ADC_Val[ADC_CHANNELS];
+uint32_t ADC_LastVal[ADC_CHANNELS];
 
 static void setPressedBtn(uint8_t btnMask)
 {
@@ -284,7 +285,50 @@ uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel)
     }
     case ADC_DISCHARGE_CURR:
     {
+        //value = (LTC6101_V_SENSE_CALCULATE(adc)*1000) / 30;
+         value = ((adc*330000)/204000);
+        break;
+    }
+    case ADC_CHARGE_CURR:
+    {
         value = (LTC6101_V_SENSE_CALCULATE(adc)*1000) / 30;
+        break;
+    }
+    case ADC_INTERNAL_THERMISTOR:
+    {
+        value = (uint16_t) adc;
+        break;
+    }
+    }
+    return (uint16_t) value;
+}
+
+uint16_t Inputs_ADC_getRecalculatedLastValue(ADC_Channels_e channel)
+{
+    uint32_t value = 0;
+    uint32_t ref = __LL_ADC_CALC_VREFANALOG_VOLTAGE(apply_Q(ADC_Val[ADC_VREF]), LL_ADC_RESOLUTION_12B);
+    uint32_t adc = __LL_ADC_CALC_DATA_TO_VOLTAGE(ref, ADC_LastVal[channel], LL_ADC_RESOLUTION_12B);
+    switch (channel) {
+    case ADC_V_BUS:
+    case ADC_VCC_IN:
+    {
+        value = adc * 11;
+        break;
+    }
+    case ADC_V_BATT:
+    {
+        value = adc * 11;
+        break;
+    }
+    case ADC_FB_ADC:
+    {
+        value = (adc * 4667) / 1000;
+        break;
+    }
+    case ADC_DISCHARGE_CURR:
+    {
+        value = ((adc*330000)/204000);
+        //value = (LTC6101_V_SENSE_CALCULATE(adc)*1000) / 30;
         break;
     }
     case ADC_CHARGE_CURR:
@@ -307,7 +351,8 @@ void DMA1_Channel1_IRQHandler(void)
         LL_ADC_REG_StartConversion(ADC1);
         for (uint32_t i = 0; i < ADC_CHANNELS; i++) {
             ADC_Val[i] -= apply_Q(ADC_Val[i]);
-            ADC_Val[i] += ADC_ConvertedValue[i];
+            ADC_LastVal[i] = ADC_ConvertedValue[i];
+            ADC_Val[i] += ADC_LastVal[i];
         }
         LL_DMA_ClearFlag_TC1(DMA1);
     }

@@ -141,7 +141,7 @@ static scpi_result_t My_ConfigureBatteryParamsLead(scpi_t * context) {
         return SCPI_RES_ERR;
     }
 
-    Battery_setState(CHARGE);
+    Battery_setState(BATTERY_CHARGE);
 
     return SCPI_RES_OK;
 }
@@ -157,7 +157,7 @@ static scpi_result_t My_ConfigureBatteryParamsDischarge(scpi_t * context) {
         return SCPI_RES_ERR;
     }
 
-    Battery_setState(DISCHARGE);
+    Battery_setState(BATTERY_DISCHARGE);
 
     return SCPI_RES_OK;
 }
@@ -165,7 +165,7 @@ static scpi_result_t My_ConfigureBatteryParamsDischarge(scpi_t * context) {
 static scpi_result_t My_ConfigureBatteryStateStop(scpi_t * context) {
     SMART_DEBUGF(DEBUG_SCPI,( "stop\r\n")); /* debug command name */
     
-    Battery_setState(STOP);
+    Battery_setState(BATTERY_STOP);
 
     return SCPI_RES_OK;
 }

@@ -21,7 +21,7 @@ FC=gfortran
 AS=arm-none-eabi-gcc
 
 # Macros
-CND_PLATFORM=GnuArmEmbedded_1-Generic
+CND_PLATFORM=GnuArmEmbedded-Generic
 CND_DLIB_EXT=so
 CND_CONF=Release
 CND_DISTDIR=dist
@@ -91,8 +91,8 @@ OBJECTFILES= \
 CFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections
 
 # CC Compiler Flags
-CCFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections -fno-rtti -fno-exceptions -fno-threadsafe-statics
-CXXFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections -fno-rtti -fno-exceptions -fno-threadsafe-statics
+CCFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections
+CXXFLAGS=--specs=nano.specs -fdata-sections -ffunction-sections
 
 # Fortran Compiler Flags
 FFLAGS=FortranCompiler

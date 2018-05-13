@@ -8,23 +8,38 @@
 #include "debug.h"
 #include "inputs.h"
 #include "pid_controller.h"
+#include "battery.h"
 
-static void TIM1_GPIO_Init(void);
+static void PowerSupply_GPIO_Init(void);
 static void TIM1_Init(void);
 static void TIM6_Init(void);
-static void StepdownProcess(void);
+static void PowerProcess(void);
 
-PIDControl PID_stepdown;
-static uint32_t mode = CONSTANT_VOLTAGE;
+//staticke promenne pro set/get
+static PowerSupplyMode_e power_supply_mode = STOP;
+
+static PowerSupplyTypeDef power_supply;
+
+
+PIDControl PID_power_supply;
+
+static uint32_t mode = CHARGE_CONSTANT_VOLTAGE;
 
 void PowerSupply_Init(void)
 {
+    power_supply.mode = STOP;
+
+
+
+
+
     //PIDInit(&PID_stepdown, 1.5, 1.1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT);  
-    PIDInit(&PID_stepdown, 1.1, 1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT);
-    PIDSetpointSet(&PID_stepdown, 580);
-    TIM1_GPIO_Init();
+    //PIDInit(&PID_power_supply, 1.1, 1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT);
+    //PIDSetpointSet(&PID_power_supply, 580);
+    PowerSupply_GPIO_Init();
     TIM1_Init();
     TIM6_Init();
+    PowerSupply_Set(DISCHARGE, 10000, 100);
 }
 
 /* TIM1 init function */
@@ -83,6 +98,20 @@ static void TIM1_Init(void)
     TIM_BDTRInitStruct.AutomaticOutput = LL_TIM_AUTOMATICOUTPUT_ENABLE;
     LL_TIM_BDTR_Init(TIM1, &TIM_BDTRInitStruct);
 
+
+    LL_TIM_OC_EnablePreload(TIM1, LL_TIM_CHANNEL_CH2);
+
+    TIM_OC_InitStruct.OCMode = LL_TIM_OCMODE_PWM1;
+    TIM_OC_InitStruct.OCState = LL_TIM_OCSTATE_ENABLE;
+    TIM_OC_InitStruct.OCNState = LL_TIM_OCSTATE_DISABLE;
+    TIM_OC_InitStruct.CompareValue = 0;
+    TIM_OC_InitStruct.OCPolarity = LL_TIM_OCPOLARITY_HIGH;
+    TIM_OC_InitStruct.OCNPolarity = LL_TIM_OCPOLARITY_LOW;
+    TIM_OC_InitStruct.OCIdleState = LL_TIM_OCIDLESTATE_LOW;
+    TIM_OC_InitStruct.OCNIdleState = LL_TIM_OCIDLESTATE_LOW;
+    LL_TIM_OC_Init(TIM1, LL_TIM_CHANNEL_CH2, &TIM_OC_InitStruct);
+
+
     //LL_TIM_EnableIT_UPDATE(TIM1);
     LL_TIM_EnableCounter(TIM1);
 
@@ -110,7 +139,7 @@ static void TIM6_Init(void)
     LL_TIM_EnableCounter(TIM6);
 }
 
-static void TIM1_GPIO_Init(void)
+static void PowerSupply_GPIO_Init(void)
 {
     LL_GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -144,6 +173,22 @@ static void TIM1_GPIO_Init(void)
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     GPIO_InitStruct.Alternate = LL_GPIO_AF_2;
     LL_GPIO_Init(DISCHG_GPIO_Port, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = DISCHG_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_2;
+    LL_GPIO_Init(DISCHG_GPIO_Port, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = FAN_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(FAN_GPIO_Port, &GPIO_InitStruct);
+    LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
 }
 
 void TIM6_IRQHandler(void)
@@ -151,50 +196,162 @@ void TIM6_IRQHandler(void)
     static uint16_t i = 0;
     if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) {
         LL_TIM_ClearFlag_UPDATE(TIM6);
-        StepdownProcess();
+        PowerProcess();
 
     }
 }
 
-static void StepdownProcess(void)
+static void PowerProcess(void)
 {
-    uint16_t value = 0;
-    if (mode == CONSTANT_VOLTAGE) {
-        value = Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
-    } else if (mode == CONSTANT_CURRENT) {
-        value = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
-        if (Inputs_ADC_getRecalculatedValue(ADC_FB_ADC) < 4500) value = 0;
+    uint16_t voltage = 0;
+    uint16_t current = 0;
+
+    switch (power_supply.mode) {
+    case DISCHARGE:
+    {
+        LL_TIM_OC_SetCompareCH1(TIM1, 0); //zastaveni nabijeni
+
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        //current = Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
+        current = Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
+
+        if (voltage < power_supply.min_voltage) current = power_supply.max_current + 1; //umela indikace dosazenim vetsiho proudu nez nastaveny => snizi se proud aby napeti nekleslo pod minimum
+        PIDInputSet(&PID_power_supply, current);
+        PIDCompute(&PID_power_supply);
+        current = PIDOutputGet(&PID_power_supply);
+        SMART_DEBUGF(DEBUG_POWER, ("%d\r\n", current));
+        LL_TIM_OC_SetCompareCH2(TIM1, current);
+
+        break;
     }
+    case CHARGE_CONSTANT_VOLTAGE:
+    {
+        LL_TIM_OC_SetCompareCH2(TIM1, 0); //zastaveni vybijeni
 
-    PIDInputSet(&PID_stepdown, value);
-    PIDCompute(&PID_stepdown);
-    uint16_t n = PIDOutputGet(&PID_stepdown);
-    //  uint16_t value=Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
 
+        if (current > power_supply.max_current) voltage = power_supply.max_voltage + 1; //umela indikace dosazenim vetsiho napeti nez je maximum => snizi se napeti aby nebyl prekrocen maximalni proud
 
-    //if(value<NAPETI) i++;
-    //else if (value>NAPETI) i--;
-    //if(i<1000)i++;
-    //else i=0;
-    //Inputs_ADC_printValues();
-    //SMART_DEBUGF(DEBUG_POWER, ("U: %d,%d,%d \r\n",Inputs_ADC_getRecalculatedValue(ADC_FB_ADC),n,Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR) ));
-    // Inputs_ADC_printChannel(ADC_CHARGE_CURR);
-    LL_TIM_OC_SetCompareCH1(TIM1, n);
+        PIDInputSet(&PID_power_supply, voltage);
+        PIDCompute(&PID_power_supply);
+        voltage = PIDOutputGet(&PID_power_supply);
+        LL_TIM_OC_SetCompareCH1(TIM1, voltage);
+
+        break;
+    }
+    case CHARGE_CONSTANT_CURRENT:
+    {
+        LL_TIM_OC_SetCompareCH2(TIM1, 0); //zastaveni vybijeni
+
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
+
+        //napeti nesmi klesnout pod minimum
+        if (voltage < MIN_VOLTAGE) current = 0; //umele zvyseni proudu
+            //napeti nesmi prerust maximum
+        else if (voltage > power_supply.max_voltage) current = power_supply.max_current + 1; //umela indikace dosazenim vetsiho proudu nez je maximum => snizi se proud aby nebylo prekroceno maximalni napeti
+
+        PIDInputSet(&PID_power_supply, current);
+        PIDCompute(&PID_power_supply);
+        current = PIDOutputGet(&PID_power_supply);
+
+        LL_TIM_OC_SetCompareCH1(TIM1, current);
+        break;
+    }
+    case STOP:
+    {
+        LL_TIM_OC_SetCompareCH1(TIM1, 0); //zastaveni nabijeni
+        LL_TIM_OC_SetCompareCH2(TIM1, 0); //zastaveni vybijeni
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current)
 {
-    switch (mode)
+    switch (mode) {
+    case DISCHARGE:
     {
-        case CONSTANT_VOLTAGE:
-        {
-            break;
+        if (current > MAX_DISCHG_CURRENT) current = MAX_DISCHG_CURRENT;
+        //prepnuti z jineho stavu
+        if (power_supply.mode != DISCHARGE) {
+            power_supply.mode = DISCHARGE;
+            LL_TIM_SetAutoReload(TIM1, 10000);
+            PIDInit(&PID_power_supply, 1.1,1, 0, 0.001, 3000, 7400, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
         }
-        case CONSTANT_CURRENT:
-        {
-            break;
+
+        power_supply.min_current = current;
+        power_supply.max_current = current;
+        power_supply.current_current = current;
+        power_supply.min_voltage = voltage;
+        power_supply.max_voltage = MAX_VOLTAGE;
+        power_supply.current_voltage = 0;
+        PIDSetpointSet(&PID_power_supply, current);
+
+        LL_GPIO_SetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        break;
+    }
+    case CHARGE_CONSTANT_VOLTAGE:
+    {
+        //prepnuti z jineho stavu
+        if (power_supply.mode != CHARGE_CONSTANT_VOLTAGE) {
+            power_supply.mode = CHARGE_CONSTANT_VOLTAGE;
+            PIDInit(&PID_power_supply, 1.1, 1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
         }
-        default:
-            break;
+
+        power_supply.min_current = MIN_CURRENT;
+        power_supply.max_current = current;
+        power_supply.current_current = 0;
+        power_supply.min_voltage = voltage;
+        power_supply.max_voltage = voltage;
+        power_supply.current_voltage = voltage;
+        PIDSetpointSet(&PID_power_supply, voltage);
+
+        LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        break;
+    }
+    case CHARGE_CONSTANT_CURRENT:
+    {
+        //prepnuti z jineho stavu
+        if (power_supply.mode != CHARGE_CONSTANT_CURRENT) {
+            power_supply.mode = CHARGE_CONSTANT_CURRENT;
+            PIDInit(&PID_power_supply, 1.1, 1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
+        }
+
+        power_supply.min_current = current;
+        power_supply.max_current = current;
+        power_supply.current_current = current;
+        power_supply.min_voltage = MIN_VOLTAGE;
+        power_supply.max_voltage = voltage;
+        power_supply.current_voltage = 0;
+        PIDSetpointSet(&PID_power_supply, current);
+
+        LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        break;
+    }
+    case STOP:
+    {
+        //prepnuti z jineho stavu
+        if (power_supply.mode != STOP) {
+            power_supply.mode = STOP;
+            PIDInit(&PID_power_supply, 1.1, 1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
+        }
+
+        power_supply.min_current = 0;
+        power_supply.max_current = 0;
+        power_supply.current_current = 0;
+        power_supply.min_voltage = 0;
+        power_supply.max_voltage = 0;
+        power_supply.current_voltage = 0;
+        PIDSetpointSet(&PID_power_supply, 0);
+        
+        LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+        break;
+    }
+    default:
+        break;
     }
 }

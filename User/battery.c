@@ -62,9 +62,9 @@ uint32_t battery_UccGet(void)
 
 uint32_t battery_Capacity(uint32_t capacity, uint32_t t)//mAmVs  
 {
-    if (Battery_getState() == CHARGE)
+    if (Battery_getState() == BATTERY_CHARGE)
         capacity += battery_Icharge_get()*(t - t_last);
-    if (Battery_getState() == DISCHARGE)
+    if (Battery_getState() == BATTERY_DISCHARGE)
         capacity += battery_Idischarge_get()*(t - t_last);
     t_last = t;
     return capacity;
@@ -72,7 +72,7 @@ uint32_t battery_Capacity(uint32_t capacity, uint32_t t)//mAmVs
 
 uint64_t charge_Pb_Acid(uint32_t t, uint64_t cappacity)
 {
-    if (Battery_getState() == STOP)
+    if (Battery_getState() == BATTERY_STOP)
         charging_state = CHARGING_STATE_STOP;
     if (t > lead.Max_charging_time)
         charging_state = CHARGING_STATE_STOP;
@@ -106,8 +106,8 @@ uint64_t charge_Pb_Acid(uint32_t t, uint64_t cappacity)
 
 uint64_t battery_discharge(uint32_t t, uint64_t cappacity)
 {
-    if (Battery_getState() != DISCHARGE)
-        Battery_setState(STOP);
+    if (Battery_getState() != BATTERY_DISCHARGE)
+        Battery_setState(BATTERY_STOP);
     if (battery_Uget() > lead.Udischarge_minimal * lead.Cells)
         battery_Idischarge_set(lead.Idischarge);
     battery_Capacity(cappacity, t);

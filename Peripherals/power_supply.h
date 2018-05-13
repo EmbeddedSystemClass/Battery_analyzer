@@ -1,16 +1,16 @@
 /** \addtogroup Peripherals
  * @{ */
- 
+
 /**
  * \defgroup Power supply
  *
  * This module contains methods for SMPS
  * @{
  */
- 
+
 #ifndef POWER_SUPPLY_H
 #define POWER_SUPPLY_H
- 
+
 #include <stdint.h>
 #include "stm32f0xx_ll_gpio.h"
 #include "stm32f0xx_ll_rcc.h"
@@ -32,13 +32,31 @@
 #endif
 
 typedef enum {
-    CONSTANT_VOLTAGE = 0,
-    CONSTANT_CURRENT,
+    STOP = 0,
+    DISCHARGE,
+    CHARGE_CONSTANT_VOLTAGE,
+    CHARGE_CONSTANT_CURRENT,
 } PowerSupplyMode_e;
+
+typedef struct {
+   PowerSupplyMode_e mode;
+   uint32_t min_current;
+   uint32_t max_current;
+   uint32_t current_current;
+   uint32_t min_voltage;
+   uint32_t max_voltage;
+   uint32_t current_voltage;
+} PowerSupplyTypeDef;
+
+#define MIN_VOLTAGE 4500
+#define MAX_VOLTAGE 15000
+#define MIN_CURRENT 0
+#define MAX_CURRENT 3000
+#define MAX_DISCHG_CURRENT 300
 
 void PowerSupply_Init(void);
 
 void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current);
 
- 
+
 #endif /* POWER_SUPPLY_H */

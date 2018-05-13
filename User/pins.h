@@ -120,4 +120,7 @@
 #define DISCHG_Pin LL_GPIO_PIN_9
 #define DISCHG_GPIO_Port GPIOA
 
+#define FAN_Pin LL_GPIO_PIN_8
+#define FAN_GPIO_Port GPIOB
+
 #endif /* PINS_H */
