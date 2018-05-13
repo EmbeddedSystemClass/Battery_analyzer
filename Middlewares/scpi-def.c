@@ -43,6 +43,7 @@
 #include "debug.h"
 #include "battery.h"
 #include "internal_timer.h"
+#include "LEDS.h"
 
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context)
 {
@@ -175,7 +176,7 @@ static scpi_result_t My_ConfigureBatteryStateStop(scpi_t * context)
     SMART_DEBUGF(DEBUG_SCPI, ("stop\r\n")); /* debug command name */
 
     Battery_setState(BATTERY_STOP);
-
+    LEDS_setColor((uint8_t[])COLOR_RED);
     return SCPI_RES_OK;
 }
 

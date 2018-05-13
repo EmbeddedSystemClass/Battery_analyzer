@@ -6,6 +6,7 @@
 #include "pins.h"
 #include "stm32f0xx_ll_tim.h"
 #include "battery.h"
+#include "LEDS.h"
 
 volatile uint32_t seconds;
 
@@ -67,6 +68,7 @@ void TIM16_IRQHandler(void)
         LL_TIM_ClearFlag_UPDATE(TIM16);
         seconds++;
         battery_process();
+        LEDS_show();
     }
 }
 
