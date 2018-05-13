@@ -14,10 +14,15 @@
 #include "stm32f0xx.h"
 
 typedef enum {
+    BATTERY_STOP,
     BATTERY_CHARGE,
     BATTERY_DISCHARGE,
-    BATTERY_STOP,
 } Battery_controll_state_e;
+
+typedef enum {
+    BATTERY_LEAD,
+    BATTERY_LIION
+} Battery_types_e;
 
 typedef struct {
     uint32_t Icharge;
@@ -32,6 +37,7 @@ typedef struct {
 
 typedef struct {
     Battery_controll_state_e controll_state;
+    Battery_types_e battery_type;
 } BatteryParam_s;
 
 void battery_Uset(uint32_t voltage);
@@ -45,7 +51,8 @@ void Battery_setState(Battery_controll_state_e newstate);
 Battery_controll_state_e Battery_getState(void);
 uint32_t battery_Capacity(uint32_t cappacity, uint32_t t);
 uint64_t charge_Pb_Acid (uint32_t t, uint64_t cappacity);
-
+void Battery_setType(Battery_types_e newtype);
+Battery_types_e Battery_getType(void);
 extern Battery_s lead;
-
+void battery_process(void);
 #endif /* BATTERY_H */

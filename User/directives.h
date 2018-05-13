@@ -9,7 +9,7 @@
     #define DEBUG_BTN           SMART_DEBUG_OFF
     #define DEBUG_ADC           SMART_DEBUG_OFF
     #define DEBUG_SCPI          SMART_DEBUG_OFF
-    #define DEBUG_POWER         SMART_DEBUG_ON
+    #define DEBUG_POWER         SMART_DEBUG_OFF
 
 
 #define USE_WDT     (1)

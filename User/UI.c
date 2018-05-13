@@ -262,21 +262,21 @@ void show_remote_access (void)
             break;
         case BATTERY_CHARGE: 
             temp_I = battery_Icharge_get();
-             UG_PutString(10, 0, "Vzdalene rizeni"); 
+             UG_PutString(0, 0, "Vzdalene rizeni"); 
              smart_siprintf(textbuff, "Napeti: %d.%02dV",12,36);//temp_U/1000,temp_U%1000/10);
-             UG_PutString(10, 12, textbuff);
-             smart_siprintf(textbuff, "Nab. proud: %d.%02dA",temp_I/1000,temp_I%1000/10);
-             UG_PutString(10, 24, textbuff);
+             UG_PutString(0, 12, textbuff);
+             smart_siprintf(textbuff, "Proud: %03dmA",temp_I);
+             UG_PutString(0, 24, textbuff);
 //             smart_siprintf(textbuff, "Nabijeta C: %d.%02dAh",10,200);
 //             UG_PutString(10, 36, textbuff);
             break;
         case BATTERY_DISCHARGE: 
              temp_I = battery_Idischarge_get();
-             UG_PutString(10, 0, "Vzdalene rizeni"); 
-             smart_siprintf(textbuff, "Napeti: %d.%02dV",temp_U/1000,temp_U%1000);
-             UG_PutString(10, 12, textbuff);
-             smart_siprintf(textbuff, "Vybijeci proud: %d.%02dA",temp_I/1000,temp_I%1000);
-             UG_PutString(10, 24, textbuff);
+             UG_PutString(0, 0, "Vzdalene rizeni"); 
+             smart_siprintf(textbuff, "Napeti: %02d.%02dV",temp_U/1000,temp_U%1000/10);
+             UG_PutString(0, 12, textbuff);
+             smart_siprintf(textbuff, "Proud: %03dmA",temp_I);
+             UG_PutString(0, 24, textbuff);
 //             smart_siprintf(textbuff, "Vybita C: %d.%02dAh",10,200);
 //             UG_PutString(10, 36, textbuff);
             break;

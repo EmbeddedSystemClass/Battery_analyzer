@@ -275,7 +275,7 @@ uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel)
     }
     case ADC_V_BATT:
     {
-        value = adc * 11;
+        value = (adc * 4667) / 1000;
         break;
     }
     case ADC_FB_ADC:
@@ -286,7 +286,8 @@ uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel)
     case ADC_DISCHARGE_CURR:
     {
         //value = (LTC6101_V_SENSE_CALCULATE(adc)*1000) / 30;
-         value = ((adc*330000)/204000);
+        value = ((adc*330000)/180000);
+         //value = ((adc*330000)/204000);
         break;
     }
     case ADC_CHARGE_CURR:

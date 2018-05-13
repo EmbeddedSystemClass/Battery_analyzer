@@ -29,17 +29,14 @@ void PowerSupply_Init(void)
 {
     power_supply.mode = STOP;
 
-
-
-
-
     //PIDInit(&PID_stepdown, 1.5, 1.1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT);  
     //PIDInit(&PID_power_supply, 1.1, 1, 0, 0.001, 0, 1000, AUTOMATIC, DIRECT);
     //PIDSetpointSet(&PID_power_supply, 580);
     PowerSupply_GPIO_Init();
     TIM1_Init();
     TIM6_Init();
-    PowerSupply_Set(DISCHARGE, 7000, 100-12);
+    PowerSupply_Set(STOP,0,0);
+    //PowerSupply_Set(DISCHARGE, 11500, 100-12);
 }
 
 /* TIM1 init function */
@@ -189,6 +186,14 @@ static void PowerSupply_GPIO_Init(void)
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(FAN_GPIO_Port, &GPIO_InitStruct);
     LL_GPIO_ResetOutputPin(FAN_GPIO_Port, FAN_Pin);
+    
+    GPIO_InitStruct.Pin = V_BATT_RANGE_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(V_BATT_RANGE_GPIO_Port, &GPIO_InitStruct);
+    LL_GPIO_SetOutputPin(V_BATT_RANGE_GPIO_Port, V_BATT_RANGE_Pin);
 }
 
 void TIM6_IRQHandler(void)
@@ -211,7 +216,7 @@ static void PowerProcess(void)
     {
         LL_TIM_OC_SetCompareCH1(TIM1, 0); //zastaveni nabijeni
 
-        voltage = Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
         //current = Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
         current = Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
 
@@ -228,7 +233,7 @@ static void PowerProcess(void)
     {
         LL_TIM_OC_SetCompareCH2(TIM1, 0); //zastaveni vybijeni
 
-        voltage = Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
         current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
 
         if (current > power_supply.max_current) voltage = power_supply.max_voltage + 1; //umela indikace dosazenim vetsiho napeti nez je maximum => snizi se napeti aby nebyl prekrocen maximalni proud
@@ -244,7 +249,7 @@ static void PowerProcess(void)
     {
         LL_TIM_OC_SetCompareCH2(TIM1, 0); //zastaveni vybijeni
 
-        voltage = Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
         current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
 
         //napeti nesmi klesnout pod minimum

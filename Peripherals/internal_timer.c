@@ -5,6 +5,7 @@
 #include "stm32f0xx.h"
 #include "pins.h"
 #include "stm32f0xx_ll_tim.h"
+#include "battery.h"
 
 volatile uint32_t seconds;
 
@@ -65,6 +66,7 @@ void TIM16_IRQHandler(void)
     if (LL_TIM_IsActiveFlag_UPDATE(TIM16) != RESET) {
         LL_TIM_ClearFlag_UPDATE(TIM16);
         seconds++;
+        battery_process();
     }
 }
 

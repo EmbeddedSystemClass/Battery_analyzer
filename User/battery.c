@@ -1,6 +1,7 @@
 #include "battery.h"
 #include "debug.h"
 #include "inputs.h"
+#include "power_supply.h"
 
 BatteryParam_s battery;
 Battery_s lead;
@@ -25,6 +26,16 @@ Battery_controll_state_e Battery_getState(void)
     return battery.controll_state;
 }
 
+void Battery_setType(Battery_types_e newtype)
+{
+    battery.battery_type = newtype;
+}
+
+Battery_types_e Battery_getType(void)
+{
+    return battery.battery_type;
+}
+
 void battery_Uset(uint32_t voltage)
 {
     ;
@@ -42,7 +53,7 @@ void battery_Idischarge_set(uint32_t current)
 
 uint32_t battery_Uget(void)
 {
-    return Inputs_ADC_getRecalculatedValue(ADC_FB_ADC);
+    return Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
 }
 
 uint32_t battery_Icharge_get(void)
@@ -70,7 +81,7 @@ uint32_t battery_Capacity(uint32_t capacity, uint32_t t)//mAmVs
     return capacity;
 }
 
-uint64_t charge_Pb_Acid(uint32_t t, uint64_t cappacity)
+uint64_t charge_Pb_Acid(uint32_t t, uint64_t capacity)
 {
     if (Battery_getState() == BATTERY_STOP)
         charging_state = CHARGING_STATE_STOP;
@@ -78,7 +89,7 @@ uint64_t charge_Pb_Acid(uint32_t t, uint64_t cappacity)
         charging_state = CHARGING_STATE_STOP;
     if (battery_UccGet() < (lead.Ucharge_cell * lead.Cells) + 1000)
         charging_state = CHARGING_STATE_STOP;
-    battery_Capacity(cappacity, t);
+    battery_Capacity(capacity, t);
 
     switch (charging_state) {
     case CHARGING_STATE_CC:
@@ -101,7 +112,7 @@ uint64_t charge_Pb_Acid(uint32_t t, uint64_t cappacity)
         break;
 
     }
-    return (cappacity);
+    return (capacity);
 }
 
 uint64_t battery_discharge(uint32_t t, uint64_t cappacity)
@@ -111,4 +122,41 @@ uint64_t battery_discharge(uint32_t t, uint64_t cappacity)
     if (battery_Uget() > lead.Udischarge_minimal * lead.Cells)
         battery_Idischarge_set(lead.Idischarge);
     battery_Capacity(cappacity, t);
+}
+
+void battery_process(void)
+{
+    uint32_t voltage, current;
+    static uint64_t capacity = 12345;
+    switch (Battery_getState()) {
+    case BATTERY_DISCHARGE:
+    {
+        PowerSupply_Set(DISCHARGE, lead.Udischarge_minimal * lead.Cells, lead.Idischarge);
+
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
+        current = Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
+        smart_iprintf("%ld,%ld,%ld,%ld,DISCHARGE\r\n", voltage, current, (uint32_t) capacity, lead.Udischarge_minimal);
+        if (voltage <= lead.Udischarge_minimal) Battery_setState(BATTERY_STOP);
+        break;
+    }
+    case BATTERY_CHARGE:
+    {
+
+
+        break;
+    }
+
+    case BATTERY_STOP:
+    {
+
+        PowerSupply_Set(STOP, 0, 0);
+
+        voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
+        current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
+        smart_iprintf("%d,%d,%d,STOP\r\n", voltage, current, capacity);
+        break;
+    }
+    default:
+        break;
+    }
 }

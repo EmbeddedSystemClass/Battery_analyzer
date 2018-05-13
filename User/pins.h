@@ -91,11 +91,9 @@
 #define UART_PINS_CLOCK  LL_AHB1_GRP1_PERIPH_GPIOB
 #define UART_UART_CLOCK LL_APB1_GRP2_PERIPH_USART1
 #define UART_INSTANCE   USART1
-#if (DEBUG_POWER==SMART_DEBUG_ON)
-    #define UART_SPEED  2000000
-#else
+
     #define UART_SPEED  57600
-#endif
+
 #define UART_AF     LL_GPIO_AF_0
 
 #define I2C_PINS_PORT  GPIOF
@@ -122,5 +120,10 @@
 
 #define FAN_Pin LL_GPIO_PIN_8
 #define FAN_GPIO_Port GPIOB
+
+#define V_BATT_RANGE_Pin LL_GPIO_PIN_1
+#define V_BATT_RANGE_GPIO_Port GPIOA
+
+
 
 #endif /* PINS_H */

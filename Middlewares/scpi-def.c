@@ -44,10 +44,11 @@
 #include "battery.h"
 #include "internal_timer.h"
 
-static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
+static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context)
+{
     scpi_number_t param1, param2;
     char bf[15];
-    SMART_DEBUGF(DEBUG_SCPI,("meas:volt:dc\r\n"));
+    SMART_DEBUGF(DEBUG_SCPI, ("meas:volt:dc\r\n"));
 
     /* read first parameter if present */
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
@@ -61,11 +62,11 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
-    SMART_DEBUGF(DEBUG_SCPI,("\tP1=%s\r\n", bf));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP1=%s\r\n", bf));
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-    SMART_DEBUGF(DEBUG_SCPI,("\tP2=%s\r\n", bf));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP2=%s\r\n", bf));
 
 
     SCPI_ResultDouble(context, 0);
@@ -73,10 +74,11 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
-static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context) {
+static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context)
+{
     scpi_number_t param1, param2;
     char bf[15];
-    SMART_DEBUGF(DEBUG_SCPI,( "meas:volt:ac\r\n")); /* debug command name */
+    SMART_DEBUGF(DEBUG_SCPI, ("meas:volt:ac\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
@@ -90,20 +92,21 @@ static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context) {
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%s\r\n", bf));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP1=%s\r\n", bf));
 
 
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP2=%s\r\n", bf));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP2=%s\r\n", bf));
 
     SCPI_ResultDouble(context, 0);
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t DMM_ConfigureVoltageDc(scpi_t * context) {
+static scpi_result_t DMM_ConfigureVoltageDc(scpi_t * context)
+{
     double param1, param2;
-    SMART_DEBUGF(DEBUG_SCPI,( "conf:volt:dc\r\n")); /* debug command name */
+    SMART_DEBUGF(DEBUG_SCPI, ("conf:volt:dc\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamDouble(context, &param1, TRUE)) {
@@ -115,14 +118,15 @@ static scpi_result_t DMM_ConfigureVoltageDc(scpi_t * context) {
         /* do something, if parameter not present */
     }
 
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%lf\r\n", param1));
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP2=%lf\r\n", param2));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP1=%lf\r\n", param1));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP2=%lf\r\n", param2));
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t My_ConfigureBatteryParamsLead(scpi_t * context) {
-    SMART_DEBUGF(DEBUG_SCPI,( "lead\r\n")); /* debug command name */
+static scpi_result_t My_ConfigureBatteryParamsLead(scpi_t * context)
+{
+    SMART_DEBUGF(DEBUG_SCPI, ("lead\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamUInt32(context, &lead.Icharge, TRUE)) {
@@ -141,13 +145,15 @@ static scpi_result_t My_ConfigureBatteryParamsLead(scpi_t * context) {
         return SCPI_RES_ERR;
     }
 
+    Battery_setType(BATTERY_LEAD);
     Battery_setState(BATTERY_CHARGE);
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t My_ConfigureBatteryParamsDischarge(scpi_t * context) {
-    SMART_DEBUGF(DEBUG_SCPI,( "disc\r\n")); /* debug command name */
+static scpi_result_t My_ConfigureBatteryParamsDischarge(scpi_t * context)
+{
+    SMART_DEBUGF(DEBUG_SCPI, ("disc\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamUInt32(context, &lead.Udischarge_minimal, TRUE)) {
@@ -156,22 +162,26 @@ static scpi_result_t My_ConfigureBatteryParamsDischarge(scpi_t * context) {
     if (!SCPI_ParamUInt32(context, &lead.Idischarge, TRUE)) {
         return SCPI_RES_ERR;
     }
-
+    if (!SCPI_ParamUInt32(context, &lead.Cells, TRUE)) {
+        return SCPI_RES_ERR;
+    }
     Battery_setState(BATTERY_DISCHARGE);
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t My_ConfigureBatteryStateStop(scpi_t * context) {
-    SMART_DEBUGF(DEBUG_SCPI,( "stop\r\n")); /* debug command name */
-    
+static scpi_result_t My_ConfigureBatteryStateStop(scpi_t * context)
+{
+    SMART_DEBUGF(DEBUG_SCPI, ("stop\r\n")); /* debug command name */
+
     Battery_setState(BATTERY_STOP);
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t My_ConfigureBatteryReadoutTimeout(scpi_t * context) {
-    SMART_DEBUGF(DEBUG_SCPI,( "read\r\n")); /* debug command name */
+static scpi_result_t My_ConfigureBatteryReadoutTimeout(scpi_t * context)
+{
+    SMART_DEBUGF(DEBUG_SCPI, ("read\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamUInt32(context, &lead.ReadOutTimeout, TRUE)) {
@@ -181,16 +191,17 @@ static scpi_result_t My_ConfigureBatteryReadoutTimeout(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
-static scpi_result_t TEST_Bool(scpi_t * context) {
+static scpi_result_t TEST_Bool(scpi_t * context)
+{
     scpi_bool_t param1;
-    SMART_DEBUGF(DEBUG_SCPI,( "TEST:BOOL\r\n")); /* debug command name */
+    SMART_DEBUGF(DEBUG_SCPI, ("TEST:BOOL\r\n")); /* debug command name */
 
     /* read first parameter if present */
     if (!SCPI_ParamBool(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
 
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%d\r\n", param1));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP1=%d\r\n", param1));
 
     return SCPI_RES_OK;
 }
@@ -202,7 +213,8 @@ scpi_choice_def_t trigger_source[] = {
     SCPI_CHOICE_LIST_END /* termination of option list */
 };
 
-static scpi_result_t TEST_ChoiceQ(scpi_t * context) {
+static scpi_result_t TEST_ChoiceQ(scpi_t * context)
+{
 
     int32_t param;
     const char * name;
@@ -212,24 +224,26 @@ static scpi_result_t TEST_ChoiceQ(scpi_t * context) {
     }
 
     SCPI_ChoiceToName(trigger_source, param, &name);
-    SMART_DEBUGF(DEBUG_SCPI,( "\tP1=%s (%ld)\r\n", name, (long int) param));
+    SMART_DEBUGF(DEBUG_SCPI, ("\tP1=%s (%ld)\r\n", name, (long int) param));
 
     SCPI_ResultInt32(context, param);
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t TEST_Numbers(scpi_t * context) {
+static scpi_result_t TEST_Numbers(scpi_t * context)
+{
     int32_t numbers[2];
 
     SCPI_CommandNumbers(context, numbers, 2, 1);
 
-    SMART_DEBUGF(DEBUG_SCPI,( "TEST numbers %ld %ld\r\n", numbers[0], numbers[1]));
+    SMART_DEBUGF(DEBUG_SCPI, ("TEST numbers %ld %ld\r\n", numbers[0], numbers[1]));
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t TEST_Text(scpi_t * context) {
+static scpi_result_t TEST_Text(scpi_t * context)
+{
     char buffer[100];
     size_t copy_len;
 
@@ -237,12 +251,13 @@ static scpi_result_t TEST_Text(scpi_t * context) {
         buffer[0] = '\0';
     }
 
-    SMART_DEBUGF(DEBUG_SCPI,( "TEXT: ***%s***\r\n", buffer));
+    SMART_DEBUGF(DEBUG_SCPI, ("TEXT: ***%s***\r\n", buffer));
 
     return SCPI_RES_OK;
 }
 
-static scpi_result_t TEST_ArbQ(scpi_t * context) {
+static scpi_result_t TEST_ArbQ(scpi_t * context)
+{
     const char * data;
     size_t len;
 
@@ -270,7 +285,8 @@ typedef struct _scpi_channel_value_t scpi_channel_value_t;
  *
  * @param channel_list channel list, compare to SCPI99 Vol 1 Ch. 8.3.2
  */
-static scpi_result_t TEST_Chanlst(scpi_t *context) {
+static scpi_result_t TEST_Chanlst(scpi_t *context)
+{
     scpi_parameter_t channel_list_param;
 #define MAXROW 2    /* maximum number of rows */
 #define MAXCOL 6    /* maximum number of columns */
@@ -353,7 +369,7 @@ static scpi_result_t TEST_Chanlst(scpi_t *context) {
                                 if (arr_idx >= MAXROW * MAXCOL) {
                                     return SCPI_RES_ERR;
                                 }
-                                if (m == (size_t)values_to[1]) {
+                                if (m == (size_t) values_to[1]) {
                                     /* endpoint reached, stop column for-loop */
                                     for_stop_col = TRUE;
                                 }
@@ -371,7 +387,7 @@ static scpi_result_t TEST_Chanlst(scpi_t *context) {
                                 return SCPI_RES_ERR;
                             }
                         }
-                        if (n == (size_t)values_to[0]) {
+                        if (n == (size_t) values_to[0]) {
                             /* endpoint reached, stop row for-loop */
                             for_stop_row = TRUE;
                         }
@@ -393,11 +409,11 @@ static scpi_result_t TEST_Chanlst(scpi_t *context) {
 
     {
         size_t i;
-        SMART_DEBUGF(DEBUG_SCPI,( "TEST_Chanlst: "));
-        for (i = 0; i< arr_idx; i++) {
-            SMART_DEBUGF(DEBUG_SCPI,( "%ld!%ld, ", array[i].row, array[i].col));
+        SMART_DEBUGF(DEBUG_SCPI, ("TEST_Chanlst: "));
+        for (i = 0; i < arr_idx; i++) {
+            SMART_DEBUGF(DEBUG_SCPI, ("%ld!%ld, ", array[i].row, array[i].col));
         }
-        SMART_DEBUGF(DEBUG_SCPI,( "\r\n"));
+        SMART_DEBUGF(DEBUG_SCPI, ("\r\n"));
     }
     return SCPI_RES_OK;
 }
@@ -410,7 +426,8 @@ static scpi_result_t TEST_Chanlst(scpi_t *context) {
  *
  * Return SCPI_RES_OK
  */
-static scpi_result_t My_CoreTstQ(scpi_t * context) {
+static scpi_result_t My_CoreTstQ(scpi_t * context)
+{
 
     SCPI_ResultInt32(context, 0);
 
@@ -434,9 +451,9 @@ const scpi_command_t scpi_commands[] = {
     { .pattern = "*WAI", .callback = SCPI_CoreWai,},
 
     /* Required SCPI commands (SCPI std V1999.0 4.2.1) */
-//    {.pattern = "SYSTem:ERRor[:NEXT]?", .callback = SCPI_SystemErrorNextQ,},
-//    {.pattern = "SYSTem:ERRor:COUNt?", .callback = SCPI_SystemErrorCountQ,},
-//    {.pattern = "SYSTem:VERSion?", .callback = SCPI_SystemVersionQ,},
+    //    {.pattern = "SYSTem:ERRor[:NEXT]?", .callback = SCPI_SystemErrorNextQ,},
+    //    {.pattern = "SYSTem:ERRor:COUNt?", .callback = SCPI_SystemErrorCountQ,},
+    //    {.pattern = "SYSTem:VERSion?", .callback = SCPI_SystemVersionQ,},
 
     /* {.pattern = "STATus:OPERation?", .callback = scpi_stub_callback,}, */
     /* {.pattern = "STATus:OPERation:EVENt?", .callback = scpi_stub_callback,}, */
@@ -444,38 +461,38 @@ const scpi_command_t scpi_commands[] = {
     /* {.pattern = "STATus:OPERation:ENABle", .callback = scpi_stub_callback,}, */
     /* {.pattern = "STATus:OPERation:ENABle?", .callback = scpi_stub_callback,}, */
 
-//    {.pattern = "STATus:QUEStionable[:EVENt]?", .callback = SCPI_StatusQuestionableEventQ,},
+    //    {.pattern = "STATus:QUEStionable[:EVENt]?", .callback = SCPI_StatusQuestionableEventQ,},
     /* {.pattern = "STATus:QUEStionable:CONDition?", .callback = scpi_stub_callback,}, */
-//    {.pattern = "STATus:QUEStionable:ENABle", .callback = SCPI_StatusQuestionableEnable,},
-//    {.pattern = "STATus:QUEStionable:ENABle?", .callback = SCPI_StatusQuestionableEnableQ,},
-//
-//    {.pattern = "STATus:PRESet", .callback = SCPI_StatusPreset,},
+    //    {.pattern = "STATus:QUEStionable:ENABle", .callback = SCPI_StatusQuestionableEnable,},
+    //    {.pattern = "STATus:QUEStionable:ENABle?", .callback = SCPI_StatusQuestionableEnableQ,},
+    //
+    //    {.pattern = "STATus:PRESet", .callback = SCPI_StatusPreset,},
 
     /* DMM */
-//    {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
-//    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
-//    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
-//    {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
-//    {.pattern = "MEASure:CURRent:DC?", .callback = SCPI_StubQ,},
-//    {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
-//    {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
-//    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
-//    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
-//    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
-    
-    {.pattern = "LEAD", .callback = My_ConfigureBatteryParamsLead,},   
+    //    {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
+    //    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
+    //    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
+    //    {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
+    //    {.pattern = "MEASure:CURRent:DC?", .callback = SCPI_StubQ,},
+    //    {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
+    //    {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
+    //    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
+    //    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
+    //    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
+
+    {.pattern = "LEAD", .callback = My_ConfigureBatteryParamsLead,},
     {.pattern = "DISC", .callback = My_ConfigureBatteryParamsDischarge,},
     {.pattern = "STOP", .callback = My_ConfigureBatteryStateStop,},
     {.pattern = "READ", .callback = My_ConfigureBatteryReadoutTimeout,},
 
-//    {.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
+    //    {.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
 
-//    {.pattern = "TEST:BOOL", .callback = TEST_Bool,},
-//    {.pattern = "TEST:CHOice?", .callback = TEST_ChoiceQ,},
-//    {.pattern = "TEST#:NUMbers#", .callback = TEST_Numbers,},
+    //    {.pattern = "TEST:BOOL", .callback = TEST_Bool,},
+    //    {.pattern = "TEST:CHOice?", .callback = TEST_ChoiceQ,},
+    //    {.pattern = "TEST#:NUMbers#", .callback = TEST_Numbers,},
     {.pattern = "TEST:TEXT", .callback = TEST_Text,},
-//    {.pattern = "TEST:ARBitrary?", .callback = TEST_ArbQ,},
-//    {.pattern = "TEST:CHANnellist", .callback = TEST_Chanlst,},
+    //    {.pattern = "TEST:ARBitrary?", .callback = TEST_ArbQ,},
+    //    {.pattern = "TEST:CHANnellist", .callback = TEST_Chanlst,},
 
     SCPI_CMD_LIST_END
 };
