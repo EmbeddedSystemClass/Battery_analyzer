@@ -28,7 +28,7 @@ typedef struct {
     uint32_t Icharge;
     uint32_t Ucharge_cell;
     uint32_t Cells;
-    uint32_t Icutoff;
+    uint32_t Ucutoff;
     uint32_t Max_charging_time;
     uint32_t Udischarge_minimal;
     uint32_t Idischarge;

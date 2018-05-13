@@ -138,7 +138,7 @@ static scpi_result_t My_ConfigureBatteryParamsLead(scpi_t * context)
     if (!SCPI_ParamUInt32(context, &lead.Cells, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (!SCPI_ParamUInt32(context, &lead.Icutoff, TRUE)) {
+    if (!SCPI_ParamUInt32(context, &lead.Ucutoff, TRUE)) {
         return SCPI_RES_ERR;
     }
     if (!SCPI_ParamUInt32(context, &lead.Max_charging_time, TRUE)) {

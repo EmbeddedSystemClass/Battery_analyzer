@@ -263,7 +263,7 @@ void show_remote_access (void)
         case BATTERY_CHARGE: 
             temp_I = battery_Icharge_get();
              UG_PutString(0, 0, "Vzdalene rizeni"); 
-             smart_siprintf(textbuff, "Napeti: %d.%02dV",12,36);//temp_U/1000,temp_U%1000/10);
+             smart_siprintf(textbuff, "Napeti: %02d.%02dV",temp_U/1000,temp_U%1000/10);
              UG_PutString(0, 12, textbuff);
              smart_siprintf(textbuff, "Proud: %03dmA",temp_I);
              UG_PutString(0, 24, textbuff);

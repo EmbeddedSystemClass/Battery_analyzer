@@ -101,7 +101,7 @@ uint64_t charge_Pb_Acid(uint32_t t, uint64_t capacity)
 
     case CHARGING_STATE_CV:
         battery_Uset(lead.Cells * lead.Ucharge_cell);
-        if (battery_Icharge_get() <= lead.Icutoff)
+        if (battery_Icharge_get() <= lead.Ucutoff)
             charging_state = CHARGING_STATE_STOP;
         //            LEDS_setColor(COLOR_ORANGE);            
         break;
@@ -128,32 +128,39 @@ void battery_process(void)
 {
     uint32_t voltage, current;
     static uint64_t capacity = 12345;
+
+    voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
+
     switch (Battery_getState()) {
     case BATTERY_DISCHARGE:
     {
-        PowerSupply_Set(DISCHARGE, lead.Udischarge_minimal * lead.Cells, lead.Idischarge);
-
-        voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
         current = Inputs_ADC_getRecalculatedValue(ADC_DISCHARGE_CURR);
-        smart_iprintf("%ld,%ld,%ld,%ld,DISCHARGE\r\n", voltage, current, (uint32_t) capacity, lead.Udischarge_minimal);
+        PowerSupply_Set(DISCHARGE, lead.Udischarge_minimal * lead.Cells, lead.Idischarge);
+        smart_iprintf("%ld,%ld,%ld,DISCHARGE\r\n", voltage, current, (uint32_t) capacity);
         if (voltage <= lead.Udischarge_minimal) Battery_setState(BATTERY_STOP);
         break;
     }
     case BATTERY_CHARGE:
     {
-
-
+        current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
+        if (voltage < lead.Ucutoff) {
+            PowerSupply_Set(CHARGE_CONSTANT_CURRENT, lead.Ucutoff * lead.Cells, lead.Icharge);
+            smart_iprintf("%ld,%ld,%ld,CHARGE_CC\r\n", voltage, current, (uint32_t) capacity);
+        } else {
+            PowerSupply_Set(CHARGE_CONSTANT_VOLTAGE, lead.Ucharge_cell * lead.Cells, lead.Icharge);
+            smart_iprintf("%ld,%ld,%ld,CHARGE_CV\r\n", voltage, current, (uint32_t) capacity);
+            if (current < (lead.Icharge / 20))Battery_setState(BATTERY_STOP);
+        }
         break;
     }
 
     case BATTERY_STOP:
     {
-
         PowerSupply_Set(STOP, 0, 0);
 
         voltage = Inputs_ADC_getRecalculatedValue(ADC_V_BATT);
         current = Inputs_ADC_getRecalculatedValue(ADC_CHARGE_CURR);
-        smart_iprintf("%d,%d,%d,STOP\r\n", voltage, current, capacity);
+        smart_iprintf("%ld,%ld,%ld,STOP\r\n", voltage, current,(uint32_t) capacity);
         break;
     }
     default:

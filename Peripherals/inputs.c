@@ -292,7 +292,7 @@ uint16_t Inputs_ADC_getRecalculatedValue(ADC_Channels_e channel)
     }
     case ADC_CHARGE_CURR:
     {
-        value = (LTC6101_V_SENSE_CALCULATE(adc)*1000) / 30;
+        value = ((adc*330000)/180000);
         break;
     }
     case ADC_INTERNAL_THERMISTOR:

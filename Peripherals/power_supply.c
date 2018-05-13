@@ -36,6 +36,7 @@ void PowerSupply_Init(void)
     TIM1_Init();
     TIM6_Init();
     PowerSupply_Set(STOP,0,0);
+   
     //PowerSupply_Set(DISCHARGE, 11500, 100-12);
 }
 
