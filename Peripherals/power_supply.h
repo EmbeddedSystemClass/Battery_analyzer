@@ -49,10 +49,10 @@ typedef struct {
 } PowerSupplyTypeDef;
 
 #define MIN_VOLTAGE 4500
-#define MAX_VOLTAGE 15000
+#define MAX_VOLTAGE 14500
 #define MIN_CURRENT 0
 #define MAX_CURRENT 3000
-#define MAX_DISCHG_CURRENT 300
+#define MAX_DISCHG_CURRENT 150
 
 void PowerSupply_Init(void);
 

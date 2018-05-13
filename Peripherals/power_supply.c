@@ -39,7 +39,7 @@ void PowerSupply_Init(void)
     PowerSupply_GPIO_Init();
     TIM1_Init();
     TIM6_Init();
-    PowerSupply_Set(DISCHARGE, 10000, 100);
+    PowerSupply_Set(DISCHARGE, 7000, 100-12);
 }
 
 /* TIM1 init function */
@@ -279,8 +279,7 @@ void PowerSupply_Set(PowerSupplyMode_e mode, uint32_t voltage, uint32_t current)
         //prepnuti z jineho stavu
         if (power_supply.mode != DISCHARGE) {
             power_supply.mode = DISCHARGE;
-            LL_TIM_SetAutoReload(TIM1, 10000);
-            PIDInit(&PID_power_supply, 1.1,1, 0, 0.001, 3000, 7400, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
+            PIDInit(&PID_power_supply, 1.1,1, 0, 0.001, 300, 1000, AUTOMATIC, DIRECT); //reinicializace => vycisteni aktualnich promennych => vystupni hodnota bude ihned 0
         }
 
         power_supply.min_current = current;
